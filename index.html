@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Códigos QR y Ventas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Fondo único */
+            background-size: cover; /* Extiende el fondo para cubrir toda la página */
+            background-position: center;
+            background-repeat: no-repeat; /* Evita que el fondo se repita */
+            font-family: 'Roboto', sans-serif;
+            
+        }
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            
+        }
+
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border: none; /* Elimina bordes de la tarjeta */
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .btn-primary {
+            border-radius: 50px;
+        }
+        .menu-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: linear-gradient(135deg, rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9)); /* Fondo combinado con el escritorio */
+            color: white;
+            display: none; /* Ocultar el menú inicialmente */
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out, background-color 0.5s, box-shadow 0.5s;
+        }
+        .menu-bar.visible {
+            display: flex; /* Mostrar el menú después de iniciar sesión */
+        }
+        .menu-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Sombra en el texto */
+        }
+        .menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+        .menu-item {
+            padding: 10px 15px; /* Reducir el tamaño del padding */
+            cursor: pointer;
+            text-align: left;
+            border-radius: 8px; /* Bordes más sutiles */
+            transition: background-color 0.2s, transform 0.15s, color 0.2s, box-shadow 0.2s;
+            font-size: 0.9rem; /* Reducir el tamaño de la fuente */
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Reducir el espacio entre ícono y texto */
+            background-color: rgba(255, 255, 255, 0.1); /* Fondo translúcido */
+        }
+        .menu-item i {
+            font-size: 1.2rem; /* Reducir el tamaño del ícono */
+            transition: transform 0.2s, color 0.2s;
+        }
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Fondo más claro al pasar el cursor */
+            transform: scale(1.05); /* Efecto de zoom más sutil */
+            color: #ffeb3b;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más ligera */
+        }
+        .menu-item:hover i {
+            transform: rotate(10deg); /* Rotación más sutil del ícono */
+            color: #ffeb3b;
+        }
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.3); /* Fondo más destacado */
+            color: #ffeb3b;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra más ligera */
+        }
+        .menu-item.active i {
+            transform: rotate(360deg); /* Rotación completa del ícono */
+        }
+        #menu-toggle-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .menu-bar {
+                transform: translateX(-100%);
+            }
+            .menu-bar.show {
+                transform: translateX(0);
+            }
+            #menu-toggle-btn {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: white;
+                z-index: 1100;
+                cursor: pointer;
+            }
+        }
+        .main-content {
+            margin-left: 0;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .main-content.menu-visible {
+            margin-left: 250px; /* Ajustar el contenido cuando el menú está visible */
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        .qr-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.8rem; /* Reducir tamaño de fuente */
+            color: white; /* Cambiar color a blanco */
+            margin-top: 20px;
+            position: fixed; /* Fijar al final de la página */
+            bottom: 0;
+            width: 100%;
+        }
+        #login-container, #register-container {
+            background: none; /* Eliminar fondo específico */
+            display: flex;
+            justify-content: center; /* Centrar horizontalmente */
+            align-items: center; /* Centrar verticalmente */
+            height: 100vh; /* Altura completa de la ventana */
+            width: 100%;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding-right: 10%; /* Espaciado desde la derecha */
+            overflow: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            border: none;
+        }
+        #login-container.hidden, #register-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card h2 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+            display: block;
+            margin-bottom: 5px;
+        }
+        #login-container img, #register-container img {
+            width: 100px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .btn-primary {
+            background-color: #1165cb;
+            border: none;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #4e0fa3;
+            transform: scale(1.05);
+        }
+        .text-primary {
+            color: #6a11cb !important;
+            font-weight: bold;
+        }
+        .text-primary:hover {
+            text-decoration: underline;
+        }
+        #data-table thead th {
+            background-color: #4e54c8; /* Color de fondo */
+            color: white; /* Color del texto */
+            text-align: center;
+            padding: 10px;
+            position: sticky; /* Fijar la cabecera */
+            top: 0; /* Mantenerla en la parte superior */
+            z-index: 1; /* Asegurar que esté por encima del contenido */
+        }
+        #register-container .card {
+            max-width: 300px; /* Reducir el ancho máximo */
+            padding: 20px; /* Reducir el padding */
+        }
+        #register-container img {
+            width: 80px; /* Reducir el tamaño de la imagen */
+            margin-bottom: 15px; /* Reducir el margen inferior */
+        }
+        #register-container h2 {
+            font-size: 1.5rem; /* Reducir el tamaño del título */
+        }
+        #register-container p {
+            font-size: 0.9rem; /* Reducir el tamaño del texto */
+        }
+        #login-container .card {
+            max-width: 300px; /* Reducir el ancho máximo */
+            padding: 20px; /* Reducir el padding */
+        }
+        #login-container img {
+            width: 80px; /* Reducir el tamaño de la imagen */
+            margin-bottom: 15px; /* Reducir el margen inferior */
+        }
+        #login-container h2 {
+            font-size: 1.5rem; /* Reducir el tamaño del título */
+        }
+        #login-container p {
+            font-size: 0.9rem; /* Reducir el tamaño del texto */
+        }
+        #qr-generator, #sales-container {
+            display: none; /* Ocultar las secciones al inicio */
+        }
+        #sales-container {
+            overflow-x: auto; /* Habilitar desplazamiento horizontal */
+            overflow-y: auto; /* Habilitar desplazamiento vertical */
+            margin-top: 0; /* Eliminar margen superior */
+            height: 100vh; /* Altura completa de la ventana */
+            width: calc(100vw - 250px); /* Ancho ajustado desde el borde derecho del menú */
+            position: fixed; /* Fijar el contenedor en la página */
+            top: 0; /* Alinear al inicio */
+            left: 250px; /* Ajustar desde el borde derecho del menú */
+            z-index: 10; /* Asegurar que esté por encima de otros elementos */
+        }
+        #data-table-container {
+            position: relative;
+            height: auto; /* Ajustar automáticamente la altura */
+            max-height: 100%; /* Permitir que ocupe todo el espacio disponible */
+            overflow-y: auto; /* Habilitar desplazamiento vertical */
+            overflow-x: auto; /* Habilitar desplazamiento horizontal */
+        }
+        @media (max-width: 1200px) {
+            #data-table-container {
+                max-height: 500px; /* Altura máxima en pantallas medianas */
+            }
+        }
+        @media (max-width: 768px) {
+            #data-table-container {
+                max-height: 300px; /* Altura máxima en pantallas pequeñas */
+            }
+        }
+        @media (max-width: 576px) {
+            #data-table-container {
+                max-height: 200px; /* Altura máxima en pantallas muy pequeñas */
+            }
+        }
+        #data-table {
+            min-width: 100%; /* Ajustar el ancho mínimo al contenedor */
+            border-collapse: collapse; /* Eliminar espacios entre bordes */
+            width: 100%; /* Ajustar la tabla al ancho del contenedor */
+        }
+        #data-table thead th {
+            position: sticky; /* Fijar la cabecera */
+            bottom: 0; /* Mantenerla en la parte inferior */
+            z-index: 1; /* Asegurar que esté por encima del contenido */
+            background-color: #4e54c8; /* Color de fondo */
+            color: white; /* Color del texto */
+            text-align: center;
+            padding: 10px;
+        }
+        #data-table tbody td {
+            text-align: center; /* Centrar el contenido de las celdas */
+        }
+        #sales-container .card {
+            width: 100%; /* Ocupa todo el ancho de la página */
+            max-width: none; /* Elimina el límite de ancho máximo */
+            padding: 40px; /* Mantener el padding interno */
+            height: 720px; /* Aumentar la altura del formulario */
+        }
+        #filter-input {
+            font-size: 1.2rem; /* Aumentar el tamaño de la fuente del campo de entrada */
+            padding: 10px; /* Aumentar el padding del campo de entrada */
+        }
+        #filter-label {
+            font-size: 1.1rem; /* Aumentar el tamaño de la fuente de la etiqueta */
+        }
+        .card {
+            width: 90%; /* Ajustar el ancho al 90% del contenedor */
+            max-width: 400px; /* Ancho máximo */
+            padding: 20px; /* Reducir padding */
+        }
+        @media (max-width: 768px) {
+            .card {
+                max-width: 200px; /* Reducir ancho máximo en pantallas pequeñas */
+            }
+        }
+        #menu-bar {
+            width: 250px; /* Ancho fijo */
+        }
+        @media (max-width: 768px) {
+            #menu-bar {
+                width: 200px; /* Reducir ancho en pantallas pequeñas */
+            }
+        }
+        .main-content {
+            margin-left: 0;
+            padding: 10px; /* Reducir padding en pantallas pequeñas */
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        .footer {
+            font-size: 0.8rem; /* Reducir tamaño de fuente en el pie de página */
+        }
+        #login-container, #register-container {
+            display: flex;
+            justify-content: center; /* Centrar horizontalmente */
+            align-items: center; /* Centrar verticalmente */
+            height: 100vh; /* Altura completa de la ventana */
+            width: 100%;
+            position: fixed; /* Fijar posición en la pantalla */
+            top: 0;
+            left: 0;
+            margin: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #data-table, .table {
+            font-size: 0.8rem; /* Reducir el tamaño de la fuente de las tablas */
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Menú interactivo -->
+        <nav id="menu-bar" class="menu-bar">
+            <div class="menu-logo">Mi Aplicación</div>
+            <ul id="menu-list" class="menu-list">
+                <li class="menu-item active" onclick="showQRGenerator()">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Generador de QR</span>
+                </li>
+                <li class="menu-item" onclick="showSales()">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Ventas</span>
+                </li>
+                <li class="menu-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
+                </li>
+            </ul>
+        </nav>
+
+        
+        <!-- Contenido principal -->
+        <div id="main-content" class="main-content">
+            <header class="header d-flex justify-content-between align-items-center mb-3">
+                <button id="menu-toggle-btn" class="btn btn-outline-secondary" onclick="toggleMenu()">☰</button>
+            </header>
+
+            <main class="main-content">
+                <!-- Inicio de Sesión -->
+                <section id="login-section" class="container">
+                    <div class="card">
+                        <img src="login-image.png" alt="Inicio de Sesión">
+                        <h2>Bienvenido</h2>
+                        <p class="text-muted">Inicia sesión para continuar</p>
+                        <form>
+                            <div class="mb-3">
+                                <label for="username" class="form-label"><i class="fas fa-user"></i> Usuario</label>
+                                <input type="text" id="username" class="form-control" placeholder="Usuario">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label"><i class="fas fa-lock"></i> Contraseña</label>
+                                <input type="password" id="password" class="form-control" placeholder="Contraseña">
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="login()">Ingresar</button>
+                            <p id="login-error" class="text-danger mt-2" style="display: none;">Usuario o contraseña incorrectos</p>
+                            <p class="text-center mt-3">¿No tienes cuenta? <a href="#" onclick="showRegister()" class="text-primary">Regístrate aquí</a></p>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Registro de Usuario -->
+                <section id="register-section" class="container" style="display: none;">
+                    <div class="card">
+                        <img src="register-image.png" alt="Registro">
+                        <h2>Crea tu cuenta</h2>
+                        <p class="text-muted">Regístrate para acceder a todas las funciones</p>
+                        <form>
+                            <div class="mb-3">
+                                <label for="register-username" class="form-label"><i class="fas fa-user"></i> Usuario</label>
+                                <input type="text" id="register-username" class="form-control" placeholder="Usuario">
+                            </div>
+                            <div class="mb-3">
+                                <label for="register-password" class="form-label"><i class="fas fa-lock"></i> Contraseña</label>
+                                <input type="password" id="register-password" class="form-control" placeholder="Contraseña">
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="register()">Registrarse</button>
+                            <p id="register-error" class="text-danger mt-2" style="display: none;">Por favor, completa todos los campos</p>
+                            <p id="register-success" class="text-success mt-2" style="display: none;">Registro exitoso. Redirigiendo al inicio de sesión...</p>
+                            <p class="text-center mt-3">¿Ya tienes cuenta? <a href="#" onclick="showLogin()" class="text-primary">Inicia sesión aquí</a></p>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Generador de QR -->
+                <section id="qr-generator" class="container">
+                    <div class="card p-4">
+                        <h2 class="text-center">Generador de Códigos QR</h2>
+                        <div class="input-group mb-3">
+                            <input type="text" id="text" class="form-control" placeholder="Ingresa el texto o URL">
+                            <button class="btn btn-primary" onclick="generarQR()">Generar QR</button>
+                        </div>
+                        <div id="qr-container" class="qr-container"></div>
+                        <div class="mt-3">
+                            <label for="excel-file" class="form-label">Cargar archivo Excel:</label>
+                            <input type="file" id="excel-file" class="form-control" accept=".xlsx, .xls" onchange="handleExcelUpload()">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ventas -->
+                <section id="sales-container" class="container">
+                    <div class="card p-4">
+                        <h2 class="text-center">Impresión de códigos</h2>
+                        <div class="mb-3">
+                            
+                        </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <button class="btn btn-secondary me-2" onclick="showUniqueModels()">Modelos</button>
+                            <select id="model-select" class="form-select me-2" style="display: none; width: auto;" onchange="filterByModel()">
+                                <option value="">Selecciona un modelo</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
+                        </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <button class="btn btn-secondary me-2" onclick="showUniqueStores()">Tiendas</button>
+                            <select id="store-select" class="form-select me-2" style="display: none; width: auto;" onchange="filterByStore()">
+                                <option value="">Selecciona una tienda</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
+                        </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <button class="btn btn-secondary me-2" onclick="showUniqueCedis()">Cedis</button>
+                            <select id="cedis-select" class="form-select me-2" style="display: none; width: auto;" onchange="filterByCedis()">
+                                <option value="">Selecciona un cedis</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter" onclick="clearCedisFilter()">Quitar filtro</button>
+                        </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <button class="btn btn-primary" onclick="printContainer()">Imprimir</button>
+                        </div>
+                        <div id="print-container" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
+                            <!-- Contenido dinámico generado por JavaScript -->
+                        </div>
+                        <div id="data-table-container"> <!-- Contenedor con desplazamiento vertical -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Visualización de Etiqueta -->
+                <section id="label-viewer" class="container" style="display: none;">
+               
+                        
+                        <div id="label-container" style="width: 100mm; height: 60mm; padding: 10px; font-size: 0.9rem;">
+                            <!-- Contenido dinámico generado por JavaScript -->
+                        </div>
+                       
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2023 Generador de Códigos QR y Ventas. Todos los derechos reservados.</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function showRegister() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('register-section').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('register-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+        }
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling; // Elemento del título
+            const piezas = parseInt(row.children[9]?.textContent || 0);
+
+            // Actualizar el total de piezas
+            const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
+            if (totalMatch) {
+                const totalActual = parseInt(totalMatch[1]);
+                const nuevoTotal = totalActual - piezas;
+
+                // Actualizar el título con el mismo diseño
+                titleElement.innerHTML = titleElement.innerHTML.replace(
+                    /<strong>Total de piezas:<\/strong> \d+/,
+                    `<strong>Total de piezas:</strong> ${nuevoTotal}`
+                );
+            }
+
+            row.remove(); // Eliminar la fila
+
+            // Mostrar notificación
+            showNotification('Fila eliminada correctamente.', 'info');
+        }
+
+        function handleExcelUpload() {
+            const fileInput = document.getElementById('excel-file');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                const container = document.getElementById('data-table-container');
+                container.innerHTML = ''; // Limpiar contenedor principal
+
+                // Obtener encabezados
+                const headers = jsonData[0];
+
+                // Agrupar datos por valores de la tercera y cuarta columna
+                const groupedData = {};
+                jsonData.slice(1).forEach(row => {
+                    const key = `${row[2]} - ${row[3]}`; // Combinar tercera y cuarta columna como clave
+                    if (!groupedData[key]) {
+                        groupedData[key] = [];
+                    }
+                    groupedData[key].push(row);
+                });
+
+                // Crear tablas por cada grupo
+                Object.keys(groupedData).forEach(key => {
+                    const groupContainer = document.createElement('div');
+                    groupContainer.classList.add('group-container', 'mb-4');
+
+                    const [cedis, tienda] = key.split(' - '); // Separar valores de la clave
+                    const pedido = groupedData[key][0][1]; // Obtener el valor único de la segunda columna
+
+                    // Calcular el total de piezas (columna 10)
+                    const totalPiezas = groupedData[key].reduce((sum, row) => sum + (parseInt(row[9]) || 0), 0);
+
+                    const title = document.createElement('div');
+                    title.classList.add('d-flex', 'justify-content-around', 'align-items-center', 'mb-3', 'p-2', 'bg-light', 'rounded', 'shadow-sm');
+                    title.style.gap = '20px'; // Espaciado entre los elementos
+                    title.innerHTML = `
+                        <div><strong>Cedis:</strong> ${cedis}</div>
+                        <div><strong>Tienda:</strong> ${tienda}</div>
+                        <div><strong>Pedido:</strong> ${pedido}</div>
+                        <div><strong>Total de piezas:</strong> ${totalPiezas}</div>
+                    `;
+                    groupContainer.appendChild(title);
+
+                    const table = document.createElement('table');
+                    table.classList.add('table', 'table-striped');
+                    groupContainer.appendChild(table);
+
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    headers.forEach((header, index) => {
+                        const th = document.createElement('th');
+                        th.textContent = header;
+                        th.style.backgroundColor = '#4e54c8';
+                        th.style.color = 'white';
+                        th.style.textAlign = 'center';
+                        th.style.padding = '10px';
+                        if (index === 0 || index === 1) th.style.display = 'none'; // Ocultar columnas 1 y 2
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    groupedData[key].forEach(row => {
+                        const tr = document.createElement('tr');
+                        row.forEach((cell, index) => {
+                            const td = document.createElement('td');
+                            td.textContent = cell;
+                            if (index === 0 || index === 1) td.style.display = 'none'; // Ocultar columnas 1 y 2
+                            if (index === 9) td.setAttribute('contenteditable', 'false'); // Hacer la columna 10 no editable por defecto
+                            tr.appendChild(td);
+                        });
+
+                        // Agregar columna de acciones con los botones
+                        const actionTd = document.createElement('td');
+                        actionTd.innerHTML = `
+                            <button class="btn btn-warning btn-sm" onclick="enableEdit(this)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteRow(this)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        `;
+                        tr.appendChild(actionTd);
+
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
+
+                    container.appendChild(groupContainer);
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function enableEdit(button) {
+            const row = button.closest('tr');
+            const editableCell = row.children[9]; // Seleccionar la columna 10
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling; // Elemento del título
+
+            if (editableCell) {
+                const originalValue = parseInt(editableCell.textContent) || 0;
+                editableCell.setAttribute('contenteditable', 'true');
+                editableCell.focus();
+                editableCell.style.backgroundColor = '#fff3cd';
+
+                editableCell.addEventListener('blur', () => {
+                    editableCell.setAttribute('contenteditable', 'false');
+                    editableCell.style.backgroundColor = '';
+
+                    const newValue = parseInt(editableCell.textContent) || 0;
+                    const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
+
+                    if (totalMatch) {
+                        const totalActual = parseInt(totalMatch[1]);
+                        const nuevoTotal = totalActual - originalValue + newValue;
+
+                        // Actualizar el título con el mismo diseño
+                        titleElement.innerHTML = titleElement.innerHTML.replace(
+                            /<strong>Total de piezas:<\/strong> \d+/,
+                            `<strong>Total de piezas:</strong> ${nuevoTotal}`
+                        );
+                    }
+                });
+            }
+        }
+
+        function toggleMenu() {
+            const menuBar = document.getElementById('menu-bar');
+            menuBar.classList.toggle('show');
+        }
+        window.addEventListener('scroll', () => {
+            const menuBar = document.getElementById('menu-bar');
+            if (window.scrollY > 50) {
+                menuBar.classList.add('hidden');
+            } else {
+                menuBar.classList.remove('hidden');
+            }
+        });
+
+        function setActiveMenuItem(selectedItem) {
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.classList.remove('active'); // Quitar la clase activa de todos los botones
+            });
+            selectedItem.classList.add('active'); // Agregar la clase activa al botón seleccionado
+        }
+
+        function showQRGenerator() {
+            setActiveMenuItem(document.querySelector('.menu-item:nth-child(1)')); // Activar el primer botón
+            document.getElementById('qr-generator').style.display = 'block';
+            document.getElementById('sales-container').style.display = 'none';
+        }
+
+        function showSales() {
+            setActiveMenuItem(document.querySelector('.menu-item:nth-child(2)')); // Activar el segundo botón
+            document.getElementById('sales-container').style.display = 'block';
+            document.getElementById('qr-generator').style.display = 'none';
+        }
+
+        function login() {
+            // Simular inicio de sesión exitoso
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('menu-bar').classList.add('visible');
+            document.getElementById('main-content').classList.add('menu-visible');
+            showQRGenerator(); // Mostrar la sección de Generador de QR por defecto
+        }
+
+        function logout() {
+            // Simular cierre de sesión
+            document.getElementById('menu-bar').classList.remove('visible');
+            document.getElementById('main-content').classList.remove('menu-visible');
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('qr-generator').style.display = 'none';
+            document.getElementById('sales-container').style.display = 'none';
+        }
+
+        function showUniqueModels() {
+            const tables = document.querySelectorAll('#data-table-container table');
+            const uniqueModels = new Set();
+
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const modelCell = row.children[5]; // Columna 6
+                    if (modelCell) uniqueModels.add(modelCell.textContent.trim());
+                });
+            });
+
+            const modelSelect = document.getElementById('model-select');
+            modelSelect.innerHTML = '<option value="">Selecciona un modelo</option>'; // Resetear opciones
+            uniqueModels.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+
+            modelSelect.style.display = 'block'; // Mostrar el selector
+            document.getElementById('clear-model-filter').style.display = 'block'; // Mostrar el botón de quitar filtro
+        }
+
+        function filterByModel() {
+            const selectedModel = document.getElementById('model-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const modelCell = row.children[5]; // Columna 6
+                    if (modelCell) {
+                        const isVisible = selectedModel ? modelCell.textContent.trim() === selectedModel : true;
+                        row.style.display = isVisible ? '' : 'none';
+                        if (isVisible) hasVisibleRows = true;
+                    }
+                });
+
+                group.style.display = hasVisibleRows ? '' : 'none'; // Mostrar u ocultar la tabla completa
+            });
+        }
+
+        function clearModelFilter() {
+            document.getElementById('model-select').value = ''; // Resetear el selector
+            filterByModel(); // Aplicar el filtro vacío para mostrar todas las filas
+            document.getElementById('clear-model-filter').style.display = 'none'; // Ocultar el botón de quitar filtro
+        }
+
+        function showUniqueStores() {
+            const tables = document.querySelectorAll('#data-table-container table');
+            const uniqueStores = new Set();
+
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const storeCell = row.children[3]; // Columna 4
+                    if (storeCell) uniqueStores.add(storeCell.textContent.trim());
+                });
+            });
+
+            const storeSelect = document.getElementById('store-select');
+            storeSelect.innerHTML = '<option value="">Selecciona una tienda</option>'; // Resetear opciones
+            uniqueStores.forEach(store => {
+                const option = document.createElement('option');
+                option.value = store;
+                option.textContent = store;
+                storeSelect.appendChild(option);
+            });
+
+            storeSelect.style.display = 'block'; // Mostrar el selector
+            document.getElementById('clear-store-filter').style.display = 'block'; // Mostrar el botón de quitar filtro
+        }
+
+        function filterByStore() {
+            const selectedStore = document.getElementById('store-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const storeCell = row.children[3]; // Columna 4
+                    if (storeCell) {
+                        const isVisible = selectedStore ? storeCell.textContent.trim() === selectedStore : true;
+                        row.style.display = isVisible ? '' : 'none';
+                        if (isVisible) hasVisibleRows = true;
+                    }
+                });
+
+                group.style.display = hasVisibleRows ? '' : 'none'; // Mostrar u ocultar la tabla completa
+            });
+        }
+
+        function clearStoreFilter() {
+            document.getElementById('store-select').value = ''; // Resetear el selector
+            filterByStore(); // Aplicar el filtro vacío para mostrar todas las filas
+            document.getElementById('clear-store-filter').style.display = 'none'; // Ocultar el botón de quitar filtro
+        }
+
+        function showUniqueCedis() {
+            const tables = document.querySelectorAll('#data-table-container table');
+            const uniqueCedis = new Set();
+
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cedisCell = row.children[2]; // Columna 3
+                    if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
+                });
+            });
+
+            const cedisSelect = document.getElementById('cedis-select');
+            cedisSelect.innerHTML = '<option value="">Selecciona un cedis</option>'; // Resetear opciones
+            uniqueCedis.forEach(cedis => {
+                const option = document.createElement('option');
+                option.value = cedis;
+                option.textContent = cedis;
+                cedisSelect.appendChild(option);
+            });
+
+            cedisSelect.style.display = 'block'; // Mostrar el selector
+            document.getElementById('clear-cedis-filter').style.display = 'block'; // Mostrar el botón de quitar filtro
+        }
+
+        function filterByCedis() {
+            const selectedCedis = document.getElementById('cedis-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cedisCell = row.children[2]; // Columna 3
+                    if (cedisCell) {
+                        const isVisible = selectedCedis ? cedisCell.textContent.trim() === selectedCedis : true;
+                        row.style.display = isVisible ? '' : 'none';
+                        if (isVisible) hasVisibleRows = true;
+                    }
+                });
+
+                group.style.display = hasVisibleRows ? '' : 'none'; // Mostrar u ocultar la tabla completa
+            });
+        }
+
+        function clearCedisFilter() {
+            document.getElementById('cedis-select').value = ''; // Resetear el selector
+            filterByCedis(); // Aplicar el filtro vacío para mostrar todas las filas
+            document.getElementById('clear-cedis-filter').style.display = 'none'; // Ocultar el botón de quitar filtro
+        }
+
+        function printContainer() {
+            const groups = document.querySelectorAll('#data-table-container .group-container');
+            const labelContainer = document.getElementById('label-container');
+            labelContainer.innerHTML = ''; // Limpiar contenido previo
+
+            const generalContainer = document.createElement('div');
+            generalContainer.style.display = 'flex';
+            generalContainer.style.flexWrap = 'wrap';
+            generalContainer.style.gap = '10px';
+            generalContainer.style.justifyContent = 'center';
+
+            groups.forEach((group, idx) => {
+                const titleElement = group.querySelector('div');
+                const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];
+                const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];
+                const oc = titleElement.querySelector('div:nth-child(3)').textContent.split(': ')[1];
+
+                // Obtener códigos y cantidades de la tabla de este grupo
+                const table = group.querySelector('table');
+                const rows = table.querySelectorAll('tbody tr');
+                let codigosYcantidades = [];
+                let totalPiezas = 0;
+                rows.forEach(row => {
+                    const codigo = row.children[4]?.textContent.trim(); // Columna 8: Código
+                    const cantidad = row.children[9]?.textContent.trim(); // Columna 10: Cantidad
+                    if (codigo && cantidad) {
+                        codigosYcantidades.push(codigo + '\n' + cantidad);
+                        totalPiezas += parseInt(cantidad) || 0;
+                    }
+                });
+                // El QR debe contener solo los valores de la columna código y cantidad, uno debajo del otro
+                // Ejemplo: 7506372983505\n2\n7506372983512\n1\n...
+                const qrText = codigosYcantidades.join('\n');
+                const totalCodigos = codigosYcantidades.length;
+
+                // Crear la tarjeta de la etiqueta
+                const card = document.createElement('div');
+                card.classList.add('card', 'p-3', 'shadow-sm');
+                card.style.width = '100mm';
+                card.style.height = '60mm';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'row';
+                card.style.justifyContent = 'space-between';
+                card.style.alignItems = 'flex-start';
+                card.style.textAlign = 'left';
+                card.style.position = 'relative';
+
+
+                let cedisNombre = cedis; // valor por defecto
+
+if (cedis === '4188') {
+    cedisNombre = 'MÉRIDA 4188';
+} else if (cedis === '4924') {
+    cedisNombre = 'MEXICALI 4924';
+} else if (cedis === '7490') {
+    cedisNombre = 'MONTERREY 7490';
+} else if (cedis === '4640') {
+    cedisNombre = 'CHIHUAHUA 4640';
+} else if (cedis === '7468') {
+    cedisNombre = 'VILLAHERMOSA 7468';
+} else if (cedis === '7493') {
+    cedisNombre = 'GUADALAJARA 7493';
+} else if (cedis === '7487') {
+    cedisNombre = 'CULIACAN 7487';
+} else if (cedis === '7471') {
+    cedisNombre = 'CHALCO 7471';
+} else if (cedis === '7464') {
+    cedisNombre = 'CUAUTITLAN 7464';
+}   
+
+                // Contenido principal
+                card.innerHTML = `
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
+                        <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
+
+                        <div style="margin-top: 5px; font-size: 12px;">Proveedor: 627375</div>
+                        <div style="margin-top: 5px; font-size: 12px;">OC: <strong>${oc}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px;">Cedis: <strong>${cedisNombre}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; text-align: center;">
+                        <svg id="barcode-${idx}" style="margin-top:1px;"></svg>
+                        <br>
+                        <strong>${tienda}</strong>
+                        </div>
+
+                        
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-width: 50px;">
+                        <div id="qr-${idx}" style="margin-bottom: 4px;"></div>
+                        <div style="
+                            margin-top: 1px;
+                            width: max-content;
+                            text-align: center;
+                            font-size: 0.9rem;
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                            background: rgba(240,240,240,0.7);
+                            border-radius: 6px;
+                            padding: 2px 5px 2px 8px;
+                        ">
+                            codigos: ${totalCodigos} / piezas: ${totalPiezas}
+                        </div>
+                    </div>
+                `;
+
+                generalContainer.appendChild(card);
+
+                // Generar código de barras para el número de tienda
+                setTimeout(() => {
+                    try {
+                        JsBarcode(`#barcode-${idx}`, tienda, {
+                            format: "CODE128",
+                            width: 2,
+                            height: 30,
+                            displayValue: false,
+                            margin: 0
+                        });
+                    } catch (e) {
+                        // Si hay error, no mostrar el código de barras
+                    }
+                }, 0);
+
+                // Generar QR con los códigos y cantidades agrupados
+                setTimeout(() => {
+                    const qrDiv = document.getElementById(`qr-${idx}`);
+                    if (qrDiv) {
+                        qrDiv.innerHTML = ""; // Limpiar por si acaso
+                        new QRCode(qrDiv, {
+                            text: qrText,
+                            width: 151,   // 4 cm ≈ 151 px
+                            height: 151,  // 4 cm ≈ 151 px
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                    }
+                }, 0);
+            });
+
+            labelContainer.appendChild(generalContainer);
+
+            // Cambiar a la sección de visualización de etiqueta
+            document.getElementById('sales-container').style.display = 'none';
+            document.getElementById('label-viewer').style.display = 'block';
+        }
+
+        function goBack() {
+            // Regresar a la sección de ventas
+            document.getElementById('label-viewer').style.display = 'none';
+            document.getElementById('sales-container').style.display = 'block';
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification-popup alert alert-${type}`;
+
+            // Crear el contenedor del ícono y el mensaje
+            const icon = document.createElement('i');
+            icon.style.marginRight = '15px';
+            icon.style.fontSize = '1.5rem'; // Aumentar el tamaño del ícono
+
+            // Asignar íconos y colores según el tipo
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+                icon.style.color = '#ffffff'; // Blanco para contraste
+                notification.style.background = 'rgba(76, 175, 80, 0.8)'; // Verde translúcido
+            } else if (type === 'error') {
+                icon.className = 'fas fa-times-circle';
+                icon.style.color = '#ffffff'; // Blanco para contraste
+                notification.style.background = 'rgba(244, 67, 54, 0.8)'; // Rojo translúcido
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+                icon.style.color = '#ffffff'; // Blanco para contraste
+                notification.style.background = 'rgba(33, 150, 243, 0.8)'; // Azul translúcido
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-circle';
+                icon.style.color = '#000000'; // Negro para contraste
+                notification.style.background = 'rgba(255, 193, 7, 0.8)'; // Amarillo translúcido
+                notification.style.color = '#212529'; // Texto oscuro para contraste
+            }
+
+            notification.style.position = 'fixed';
+            notification.style.bottom = '-100px'; // Inicia fuera de la pantalla
+            notification.style.right = '20px';
+            notification.style.zIndex = '2000';
+            notification.style.minWidth = '350px';
+            notification.style.padding = '20px';
+            notification.style.borderRadius = '15px';
+            notification.style.fontWeight = 'bold';
+            notification.style.color = '#fff';
+            notification.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.4)';
+            notification.style.transition = 'bottom 0.6s ease, opacity 0.4s ease';
+            notification.style.backdropFilter = 'blur(10px)'; // Fondo translúcido
+
+            // Agregar ícono y mensaje al contenedor
+            notification.appendChild(icon);
+            notification.appendChild(document.createTextNode(message));
+
+            document.body.appendChild(notification);
+
+            // Deslizar hacia arriba para mostrar
+            setTimeout(() => {
+                notification.style.bottom = '30px';
+            }, 100);
+
+            // Ocultar después de 4 segundos
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.bottom = '-100px'; // Deslizar hacia abajo para ocultar
+                setTimeout(() => notification.remove(), 600);
+            }, 4000);
+        }
+
+        function register() {
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+
+            if (!username || !password) {
+                document.getElementById('register-error').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('register-error').style.display = 'none';
+            document.getElementById('register-success').style.display = 'block';
+
+            // Mostrar notificación avanzada
+            showNotification('Registro exitoso. Redirigiendo al inicio de sesión...', 'success');
+
+            setTimeout(() => {
+                document.getElementById('register-success').style.display = 'none';
+                showLogin();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
+
