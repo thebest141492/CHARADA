@@ -509,12 +509,14 @@
 
                 <!-- Visualización de Etiqueta -->
                 <section id="label-viewer" class="container" style="display: none;">
-               
-                        
-                        <div id="label-container" style="width: 100mm; height: 60mm; padding: 10px; font-size: 0.9rem;">
-                            <!-- Contenido dinámico generado por JavaScript -->
-                        </div>
-                       
+                    <!-- Botón Imprimir en la parte superior -->
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                        <button class="btn btn-primary" onclick="window.print()" id="print-labels-btn">
+                            <i class="fas fa-print"></i> Imprimir Etiqueta
+                        </button>
+                    </div>
+                    <div id="label-container" style="width: 100mm; height: 60mm; padding: 10px; font-size: 0.9rem;">
+                        <!-- Contenido dinámico generado por JavaScript -->
                     </div>
                 </section>
             </main>

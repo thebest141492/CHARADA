@@ -2,7 +2,7 @@
 .form-select {
     display: inline-block;
     width: auto;
-    min-width: 150px; /* Ancho mínimo para los selectores */
+    min-width: 10px; /* Ancho mínimo para los selectores */
     margin-right: 10px; /* Espaciado entre el selector y el botón */
 }
 /* ...existing code... */

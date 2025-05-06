@@ -42,6 +42,9 @@ function logout() {
     document.getElementById('table-container').style.display = 'none'; // Ocultar la tabla
     document.getElementById('login-container').style.display = 'block'; // Mostrar el inicio de sesión
 
+    // Ocultar el contenido principal si está visible
+    document.getElementById('main-content').style.display = 'none';
+
     // Reiniciar campos de entrada
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
@@ -103,8 +106,8 @@ function generarQR() {
 
     new QRCode(qrContainer, {
         text: text,
-        width: 200,
-        height: 200
+        width: 320,
+        height: 320
     });
 }
 
@@ -357,4 +360,5 @@ function toggleModelFilter() {
         filterByModelLogic(); // Aplicar el filtro vacío
     }
 }
+
 
