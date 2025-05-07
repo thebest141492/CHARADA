@@ -402,60 +402,143 @@
             </header>
 
             <main class="main-content">
+
+
+                
                 <!-- Generador de QR -->
-                <section id="qr-generator" class="container" style="display: block;">
-                    <div class="card p-4">
-                        <h2 class="text-center">Generador de Códigos QR</h2>
-                        <div class="input-group mb-3">
-                            <input type="text" id="text" class="form-control" placeholder="Ingresa el texto o URL">
-                            <button class="btn btn-primary" onclick="generarQR()">Generar QR</button>
-                        </div>
-                        <div id="qr-container" class="qr-container"></div>
-                        <div class="mt-3">
-                            <label for="excel-file" class="form-label">Cargar archivo Excel:</label>
-                            <input type="file" id="excel-file" class="form-control" accept=".xlsx, .xls" onchange="handleExcelUpload()">
-                        </div>
-                    </div>
-                </section>
+         
+<section id="qr-generator" class="container" style="display: block;">
+    <div class="card p-5 mx-auto shadow-lg border-0" style="width: 100%; max-width: 1000px; border-radius: 20px; background: #ffffff;">
+        <h2 class="text-center mb-4" style="font-weight: 600; color: #2c3e50;">Subir Archivo Excel</h2>
+
+        <div class="d-flex flex-column align-items-center justify-content-center" 
+             style="border: 2px dashed #3498db; padding: 50px; border-radius: 15px; background-color: #f0f8ff; transition: background-color 0.3s ease; cursor: pointer;" 
+             id="drop-area" 
+             aria-labelledby="drop-area-label" 
+             role="region">
+             
+            <!-- Ícono -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#3498db" class="mb-3" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5-.4h5.6l.9-.9a.5.5 0 0 1 .7 0l.9.9h5.6a.5.5 0 0 1 0 1H9.1l-.9.9a.5.5 0 0 1-.7 0l-.9-.9H1a.5.5 0 0 1-.5-.5z"/>
+                <path d="M1 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V13z"/>
+            </svg>
+
+            <!-- Texto de instrucción -->
+            <label for="excel-file" class="form-label fs-5 text-center" id="drop-area-label" style="color: #2c3e50;">
+                Arrastra y suelta un archivo Excel aquí o haz clic para seleccionarlo
+            </label>
+
+            <!-- Input de archivo -->
+            <input type="file" id="excel-file" class="form-control w-50 mt-3" accept=".xlsx, .xls" onchange="handleExcelUpload()" 
+                   style="max-width: 400px; cursor: pointer;">
+            <small class="form-text text-muted mt-2">Formatos permitidos: .xlsx, .xls</small>
+        </div>
+    </div>
+</section>
+
+<!-- Scripts para mejorar la interacción de arrastre y soltado -->
+<script>
+    // Añadir soporte de arrastre y soltado para mejorar la experiencia de usuario
+    const dropArea = document.getElementById('drop-area');
+    const fileInput = document.getElementById('excel-file');
+
+    // Cambiar el fondo cuando se arrastra un archivo
+    dropArea.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropArea.style.backgroundColor = '#d4edda'; // Cambiar a verde claro durante el arrastre
+        dropArea.style.borderColor = '#28a745'; // Cambiar el borde a verde
+    });
+
+    // Restaurar el fondo cuando el archivo deja el área de arrastre
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.style.backgroundColor = '#f0f8ff'; // Restaurar el fondo original
+        dropArea.style.borderColor = '#3498db'; // Restaurar el borde original
+    });
+
+    // Cuando se suelta el archivo, verificar y manejarlo
+    dropArea.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+            fileInput.files = event.dataTransfer.files;
+            handleExcelUpload(); // Llamar la función para manejar el archivo
+        } else {
+            alert('Por favor, sube un archivo Excel válido (.xlsx, .xls)');
+        }
+    });
+
+    // Detectar cuando se seleccione un archivo
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            // Cambiar el fondo a un color verde cuando se selecciona un archivo
+            dropArea.style.backgroundColor = '#d4edda'; // Color verde claro
+            dropArea.style.borderColor = '#28a745'; // Cambiar color de borde a verde
+        }
+    });
+
+    // Función para manejar la carga del archivo
+    function handleExcelUpload() {
+        const file = fileInput.files[0];
+        if (file) {
+            console.log('Archivo cargado: ', file.name);
+        }
+    }
+</script>
+
+
+
+
+
+
 
                 <!-- Ventas -->
-                <section id="sales-container" class="container" style="display: none;">
-                    <div class="card p-4">
-                        <h2 class="text-center">Impresión de códigos</h2>
-                        <div class="mb-3">
-                            
-                        </div>
-                        <div class="mb-3 d-flex align-items-center">
-                            <button class="btn btn-secondary me-2" onclick="showUniqueModels()">Modelos</button>
-                            <select id="model-select" class="form-select me-2" style="display: none; width: auto;" onchange="filterByModel()">
-                                <option value="">Selecciona un modelo</option>
-                            </select>
-                            <button class="btn btn-danger" style="display: none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
-                        </div>
-                        <div class="mb-3 d-flex align-items-center">
-                            <button class="btn btn-secondary me-2" onclick="showUniqueStores()">Tiendas</button>
-                            <select id="store-select" class="form-select me-2" style="display: none; width: auto;" onchange="filterByStore()">
-                                <option value="">Selecciona una tienda</option>
-                            </select>
-                            <button class="btn btn-danger" style="display: none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
-                        </div>
-                        <div class="mb-3 d-flex align-items-center">
-                            <button class="btn btn-secondary me-2" onclick="showUniqueCedis()">Cedis</button>
-                            <select id="cedis-select" class="form-select me-2" style="display: none; width: auto;" onchange="filterByCedis()">
-                                <option value="">Selecciona un cedis</option>
-                            </select>
-                            <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter" onclick="clearCedisFilter()">Quitar filtro</button>
-                        </div>
-                        <div class="mb-3 d-flex align-items-center">
-                            <button class="btn btn-primary" onclick="printContainer()">Imprimir</button>
-                        </div>
-                        <div id="print-container" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
-                            <!-- Contenido dinámico generado por JavaScript -->
-                        </div>
-                        <div id="data-table-container"> <!-- Contenedor con desplazamiento vertical -->
-                        </div>
-                    </div>
-                </section>
+                <section id="sales-container" class="container-fluid" style="display: none; height: 100vh;">
+                    <div class="card p-4 h-100">
+        <h2 class="text-center">Impresión de códigos</h2>
+
+        <!-- Filtros (alineados horizontalmente) -->
+        <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
+            <!-- Modelos -->
+            <button class="btn btn-secondary" onclick="showUniqueModels()">Modelos</button>
+            <select id="model-select" class="form-select" style="display: none; width: auto;" onchange="filterByModel()">
+                <option value="">Selecciona un modelo</option>
+            </select>
+            <button class="btn btn-danger" style="display: none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
+
+            <!-- Tiendas -->
+            <button class="btn btn-secondary" onclick="showUniqueStores()">Tiendas</button>
+            <select id="store-select" class="form-select" style="display: none; width: auto;" onchange="filterByStore()">
+                <option value="">Selecciona una tienda</option>
+            </select>
+            <button class="btn btn-danger" style="display: none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
+
+            <!-- Cedis -->
+            <button class="btn btn-secondary" onclick="showUniqueCedis()">Cedis</button>
+            <select id="cedis-select" class="form-select" style="display: none; width: auto;" onchange="filterByCedis()">
+                <option value="">Selecciona un cedis</option>
+            </select>
+            <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter" onclick="clearCedisFilter()">Quitar filtro</button>
+
+            <!-- Botón Imprimir alineado a la derecha (usando ms-auto) -->
+            <button class="btn btn-primary ms-auto" onclick="printContainer()">Imprimir</button>
+        </div>
+
+        <!-- Área de impresión -->
+        <div id="print-container" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
+            <!-- Contenido dinámico generado por JavaScript -->
+        </div>
+
+        <!-- Tabla de datos -->
+        <div id="data-table-container">
+            <!-- Contenedor con desplazamiento vertical -->
+        </div>
+    </div>
+</section>
+
+
+
+
+                
             </main>
         </div>
     </div>
@@ -510,7 +593,7 @@
             row.remove(); // Eliminar la fila
 
             // Mostrar notificación
-            showNotification('Fila eliminada correctamente.', 'info');
+            showNotification('Se eliminó correctamente.', 'info');
         }
 
         function handleExcelUpload() {
