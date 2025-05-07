@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <style>
         body, html {
             margin: 0;
@@ -544,23 +546,36 @@
     </div>
 
     <!-- Modal para impresión -->
-    <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="printModalLabel">Previsualización de impresión</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+   <!-- Modal para impresión -->
+   <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h5 class="modal-title mb-0" id="printModalLabel">Previsualización de impresión</h5>
+                <div>
+                    <!-- Primero va el de imprimir -->
+                    <button type="button" class="btn btn-primary me-2" onclick="printModalLabels()">
+                        <i class="bi bi-printer me-1"></i> Imprimir
+                    </button>
+                    <!-- Luego el de cerrar -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cerrar
+                    </button>
                 </div>
-                <div class="modal-body">
-                    <div id="modal-label-container" style="width: 100%; min-height: 60mm;"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="printModalLabels()">Imprimir</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-label-container" 
+                     style="width: 80mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; border: 1px solid #ccc; padding: 10px;">
+                    <!-- Aquí van las cards -->
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
+
+    
 
     <footer class="footer">
         <p>&copy; 2025 Impresion de Códigos QR Ferreira. Todos los derechos reservados.</p>
@@ -929,11 +944,9 @@
             const modalLabelContainer = document.getElementById('modal-label-container');
             modalLabelContainer.innerHTML = ''; // Limpiar contenido previo
 
+            // Cambiar a bloque para mostrar tarjetas una debajo de otra
             const generalContainer = document.createElement('div');
-            generalContainer.style.display = 'flex';
-            generalContainer.style.flexWrap = 'wrap';
-            generalContainer.style.gap = '10px';
-            generalContainer.style.justifyContent = 'center';
+            generalContainer.style.display = 'block'; // Cambiado de 'flex' a 'block'
 
             groups.forEach((group, idx) => {
                 const titleElement = group.querySelector('div');
@@ -1059,11 +1072,70 @@
         function printModalLabels() {
             const printContents = document.getElementById('modal-label-container').innerHTML;
             const originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContents;
+
+
+
+
+
+
+
+
+
+
+
+            // Asegura que cada tarjeta esté en una hoja separada y que se impriman todas las tarjetas
+            // Elimina restricciones de tamaño de página y fuerza un salto de página después de cada tarjeta
+            const printStyle = `
+                <style>
+                    @media print {
+                        html, body {
+                            width: auto !important;
+                            height: auto !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            background: #fff !important;
+                        }
+                        #modal-label-container {
+                            display: block !important;
+                            width: 100% !important;
+                            min-width: 0 !important;
+                            max-width: none !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                        }
+                        #modal-label-container .card {
+                            page-break-before: auto;
+                            page-break-after: always;
+                            break-before: auto;
+                            break-after: page;
+                            display: block !important;
+                            width: 100mm !important;
+                            height: 60mm !important;
+                            max-width: none !important;
+                            margin: 0 auto 0 auto !important;
+                            box-shadow: none !important;
+                            background: #fff !important;
+                        }
+                    }
+                </style>
+            `;
+
+            document.body.innerHTML = printStyle + printContents;
             window.print();
             document.body.innerHTML = originalContents;
             window.location.reload();
         }
+
+
+
+
+
+
+
+
+
+
+        
 
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
