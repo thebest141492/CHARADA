@@ -381,7 +381,7 @@
 <body>
     <div class="page-container">
         <!-- Menú interactivo -->
-        <nav id="menu-bar" class="menu-bar">
+        <nav id="menu-bar" class="menu-bar visible">
             <div class="menu-logo">APP Charada</div>
             <ul id="menu-list" class="menu-list">
                 <li class="menu-item active" onclick="showQRGenerator()">
@@ -392,68 +392,18 @@
                     <i class="fas fa-chart-line"></i>
                     <span>Ventas</span>
                 </li>
-                <li class="menu-item" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Cerrar Sesión</span>
-                </li>
             </ul>
         </nav>
 
-        
         <!-- Contenido principal -->
-        <div id="main-content" class="main-content">
+        <div id="main-content" class="main-content menu-visible" style="display: block;">
             <header class="header d-flex justify-content-between align-items-center mb-3">
                 <button id="menu-toggle-btn" class="btn btn-outline-secondary" onclick="toggleMenu()">☰</button>
             </header>
 
             <main class="main-content">
-                <!-- Inicio de Sesión -->
-                <section id="login-section" class="container">
-                    <div class="card">
-                        <img src="login-image.png" alt="Inicio de Sesión">
-                        <h2>Bienvenido</h2>
-                        <p class="text-muted">Inicia sesión para continuar</p>
-                        <form>
-                            <div class="mb-3">
-                                <label for="username" class="form-label"><i class="fas fa-user"></i> Usuario</label>
-                                <input type="text" id="username" class="form-control" placeholder="Usuario">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label"><i class="fas fa-lock"></i> Contraseña</label>
-                                <input type="password" id="password" class="form-control" placeholder="Contraseña">
-                            </div>
-                            <button type="button" class="btn btn-primary w-100" onclick="login()">Ingresar</button>
-                            <p id="login-error" class="text-danger mt-2" style="display: none;">Usuario o contraseña incorrectos</p>
-                            <p class="text-center mt-3">¿No tienes cuenta? <a href="#" onclick="showRegister()" class="text-primary">Regístrate aquí</a></p>
-                        </form>
-                    </div>
-                </section>
-
-                <!-- Registro de Usuario -->
-                <section id="register-section" class="container" style="display: none;">
-                    <div class="card">
-                        <img src="register-image.png" alt="Registro">
-                        <h2>Crea tu cuenta</h2>
-                        <p class="text-muted">Regístrate para acceder a todas las funciones</p>
-                        <form>
-                            <div class="mb-3">
-                                <label for="register-username" class="form-label"><i class="fas fa-user"></i> Usuario</label>
-                                <input type="text" id="register-username" class="form-control" placeholder="Usuario">
-                            </div>
-                            <div class="mb-3">
-                                <label for="register-password" class="form-label"><i class="fas fa-lock"></i> Contraseña</label>
-                                <input type="password" id="register-password" class="form-control" placeholder="Contraseña">
-                            </div>
-                            <button type="button" class="btn btn-primary w-100" onclick="register()">Registrarse</button>
-                            <p id="register-error" class="text-danger mt-2" style="display: none;">Por favor, completa todos los campos</p>
-                            <p id="register-success" class="text-success mt-2" style="display: none;">Registro exitoso. Redirigiendo al inicio de sesión...</p>
-                            <p class="text-center mt-3">¿Ya tienes cuenta? <a href="#" onclick="showLogin()" class="text-primary">Inicia sesión aquí</a></p>
-                        </form>
-                    </div>
-                </section>
-
                 <!-- Generador de QR -->
-                <section id="qr-generator" class="container">
+                <section id="qr-generator" class="container" style="display: block;">
                     <div class="card p-4">
                         <h2 class="text-center">Generador de Códigos QR</h2>
                         <div class="input-group mb-3">
@@ -469,7 +419,7 @@
                 </section>
 
                 <!-- Ventas -->
-                <section id="sales-container" class="container">
+                <section id="sales-container" class="container" style="display: none;">
                     <div class="card p-4">
                         <h2 class="text-center">Impresión de códigos</h2>
                         <div class="mb-3">
@@ -506,22 +456,29 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Visualización de Etiqueta -->
-                <section id="label-viewer" class="container" style="display: none;">
-                    <!-- Botón Imprimir en la parte superior -->
-                    <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-                        <button class="btn btn-primary" onclick="window.print()" id="print-labels-btn">
-                            <i class="fas fa-print"></i> Imprimir Etiqueta
-                        </button>
-                    </div>
-                    <div id="label-container" style="width: 100mm; height: 60mm; padding: 10px; font-size: 0.9rem;">
-                        <!-- Contenido dinámico generado por JavaScript -->
-                    </div>
-                </section>
             </main>
         </div>
     </div>
+
+    <!-- Modal para impresión -->
+    <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printModalLabel">Previsualización de impresión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-label-container" style="width: 100%; min-height: 60mm;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="printModalLabels()">Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <p>&copy; 2025 Impresion de Códigos QR Ferreira. Todos los derechos reservados.</p>
     </footer>
@@ -531,16 +488,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="script.js"></script>
     <script>
-        function showRegister() {
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('register-section').style.display = 'block';
-        }
-
-        function showLogin() {
-            document.getElementById('register-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
-        }
-
         function deleteRow(button) {
             const row = button.closest('tr');
             const table = row.closest('table');
@@ -735,25 +682,6 @@
             document.getElementById('qr-generator').style.display = 'none';
         }
 
-        function login() {
-            // Simular inicio de sesión exitoso
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            document.getElementById('menu-bar').classList.add('visible');
-            document.getElementById('main-content').classList.add('menu-visible');
-            showQRGenerator(); // Mostrar la sección de Generador de QR por defecto
-        }
-
-        function logout() {
-            // Simular cierre de sesión
-            document.getElementById('menu-bar').classList.remove('visible');
-            document.getElementById('main-content').classList.remove('menu-visible');
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
-            document.getElementById('qr-generator').style.display = 'none';
-            document.getElementById('sales-container').style.display = 'none';
-        }
-
         function showUniqueModels() {
             const tables = document.querySelectorAll('#data-table-container table');
             const uniqueModels = new Set();
@@ -915,8 +843,8 @@
 
         function printContainer() {
             const groups = document.querySelectorAll('#data-table-container .group-container');
-            const labelContainer = document.getElementById('label-container');
-            labelContainer.innerHTML = ''; // Limpiar contenido previo
+            const modalLabelContainer = document.getElementById('modal-label-container');
+            modalLabelContainer.innerHTML = ''; // Limpiar contenido previo
 
             const generalContainer = document.createElement('div');
             generalContainer.style.display = 'flex';
@@ -943,12 +871,9 @@
                         totalPiezas += parseInt(cantidad) || 0;
                     }
                 });
-                // El QR debe contener solo los valores de la columna código y cantidad, uno debajo del otro
-                // Ejemplo: 7506372983505\n2\n7506372983512\n1\n...
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
 
-                // Crear la tarjeta de la etiqueta
                 const card = document.createElement('div');
                 card.classList.add('card', 'p-3', 'shadow-sm');
                 card.style.width = '100mm';
@@ -960,47 +885,41 @@
                 card.style.textAlign = 'left';
                 card.style.position = 'relative';
 
+                let cedisNombre = cedis;
+                if (cedis === '4188') {
+                    cedisNombre = 'MÉRIDA 4188';
+                } else if (cedis === '4924') {
+                    cedisNombre = 'MEXICALI 4924';
+                } else if (cedis === '7490') {
+                    cedisNombre = 'MONTERREY 7490';
+                } else if (cedis === '4640') {
+                    cedisNombre = 'CHIHUAHUA 4640';
+                } else if (cedis === '7468') {
+                    cedisNombre = 'VILLAHERMOSA 7468';
+                } else if (cedis === '7493') {
+                    cedisNombre = 'GUADALAJARA 7493';
+                } else if (cedis === '7487') {
+                    cedisNombre = 'CULIACAN 7487';
+                } else if (cedis === '7471') {
+                    cedisNombre = 'CHALCO 7471';
+                } else if (cedis === '7464') {
+                    cedisNombre = 'CUAUTITLAN 7464';
+                }
 
-                let cedisNombre = cedis; // valor por defecto
-
-if (cedis === '4188') {
-    cedisNombre = 'MÉRIDA 4188';
-} else if (cedis === '4924') {
-    cedisNombre = 'MEXICALI 4924';
-} else if (cedis === '7490') {
-    cedisNombre = 'MONTERREY 7490';
-} else if (cedis === '4640') {
-    cedisNombre = 'CHIHUAHUA 4640';
-} else if (cedis === '7468') {
-    cedisNombre = 'VILLAHERMOSA 7468';
-} else if (cedis === '7493') {
-    cedisNombre = 'GUADALAJARA 7493';
-} else if (cedis === '7487') {
-    cedisNombre = 'CULIACAN 7487';
-} else if (cedis === '7471') {
-    cedisNombre = 'CHALCO 7471';
-} else if (cedis === '7464') {
-    cedisNombre = 'CUAUTITLAN 7464';
-}   
-
-                // Contenido principal
                 card.innerHTML = `
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
                         <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
-
                         <div style="margin-top: 5px; font-size: 12px;">Proveedor: 627375</div>
                         <div style="margin-top: 5px; font-size: 12px;">OC: <strong>${oc}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px;">Cedis: <strong>${cedisNombre}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; text-align: center;">
-                        <svg id="barcode-${idx}" style="margin-top:1px;"></svg>
+                        <svg id="modal-barcode-${idx}" style="margin-top:1px;"></svg>
                         <br>
                         <strong>${tienda}</strong>
                         </div>
-
-                        
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-width: 50px;">
-                        <div id="qr-${idx}" style="margin-bottom: 4px;"></div>
+                        <div id="modal-qr-${idx}" style="margin-bottom: 4px;"></div>
                         <div style="
                             margin-top: 1px;
                             width: max-content;
@@ -1022,44 +941,45 @@ if (cedis === '4188') {
                 // Generar código de barras para el número de tienda
                 setTimeout(() => {
                     try {
-                        JsBarcode(`#barcode-${idx}`, tienda, {
+                        JsBarcode(`#modal-barcode-${idx}`, tienda, {
                             format: "CODE128",
                             width: 2,
                             height: 30,
                             displayValue: false,
                             margin: 0
                         });
-                    } catch (e) {
-                        // Si hay error, no mostrar el código de barras
-                    }
+                    } catch (e) {}
                 }, 0);
 
                 // Generar QR con los códigos y cantidades agrupados
                 setTimeout(() => {
-                    const qrDiv = document.getElementById(`qr-${idx}`);
+                    const qrDiv = document.getElementById(`modal-qr-${idx}`);
                     if (qrDiv) {
-                        qrDiv.innerHTML = ""; // Limpiar por si acaso
+                        qrDiv.innerHTML = "";
                         new QRCode(qrDiv, {
                             text: qrText,
-                            width: 151,   // 4 cm ≈ 151 px
-                            height: 151,  // 4 cm ≈ 151 px
+                            width: 151,
+                            height: 151,
                             correctLevel: QRCode.CorrectLevel.H
                         });
                     }
                 }, 0);
             });
 
-            labelContainer.appendChild(generalContainer);
+            modalLabelContainer.appendChild(generalContainer);
 
-            // Cambiar a la sección de visualización de etiqueta
-            document.getElementById('sales-container').style.display = 'none';
-            document.getElementById('label-viewer').style.display = 'block';
+            // Mostrar el modal de Bootstrap
+            const printModal = new bootstrap.Modal(document.getElementById('printModal'));
+            printModal.show();
         }
 
-        function goBack() {
-            // Regresar a la sección de ventas
-            document.getElementById('label-viewer').style.display = 'none';
-            document.getElementById('sales-container').style.display = 'block';
+        function printModalLabels() {
+            const printContents = document.getElementById('modal-label-container').innerHTML;
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            window.location.reload();
         }
 
         function showNotification(message, type = 'success') {
@@ -1121,27 +1041,6 @@ if (cedis === '4188') {
                 notification.style.bottom = '-100px'; // Deslizar hacia abajo para ocultar
                 setTimeout(() => notification.remove(), 600);
             }, 4000);
-        }
-
-        function register() {
-            const username = document.getElementById('register-username').value.trim();
-            const password = document.getElementById('register-password').value.trim();
-
-            if (!username || !password) {
-                document.getElementById('register-error').style.display = 'block';
-                return;
-            }
-
-            document.getElementById('register-error').style.display = 'none';
-            document.getElementById('register-success').style.display = 'block';
-
-            // Mostrar notificación avanzada
-            showNotification('Registro exitoso. Redirigiendo al inicio de sesión...', 'success');
-
-            setTimeout(() => {
-                document.getElementById('register-success').style.display = 'none';
-                showLogin();
-            }, 2000);
         }
     </script>
 </body>
