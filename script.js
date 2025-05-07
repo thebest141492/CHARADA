@@ -21,7 +21,7 @@ function showQRGenerator() {
     document.getElementById('qr-generator').style.display = 'block';
     document.getElementById('sales-container').style.display = 'none';
     document.getElementById('table-container').style.display = 'none';
-    document.getElementById('menu-bar').style.display = 'none'; // Ocultar el menú desplegable
+    document.getElementById('menu-bar').style.display = 'none'; // Ocultar el menú desplegableee
     document.getElementById('menu-toggle-btn').style.display = 'none'; // Ocultar el botón del menú
 }
 
