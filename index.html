@@ -266,10 +266,10 @@
         #login-container p {
             font-size: 0.9rem; /* Reducir el tamaño del texto */
         }
-        #qr-generator, #sales-container {
+        #qr-generator, #sales-container, #qr-generator-moda, #sales-container-moda {
             display: none; /* Ocultar las secciones al inicio */
         }
-        #sales-container {
+        #sales-container, #sales-container-moda {
             overflow-x: auto; /* Habilitar desplazamiento horizontal */
             overflow-y: auto; /* Habilitar desplazamiento vertical */
             margin-top: 0; /* Eliminar margen superior */
@@ -280,7 +280,7 @@
             left: 250px; /* Ajustar desde el borde derecho del menú */
             z-index: 10; /* Asegurar que esté por encima de otros elementos */
         }
-        #data-table-container {
+        #data-table-container, #data-table-container-moda {
             position: relative;
             height: auto; /* Ajustar automáticamente la altura */
             max-height: 100%; /* Permitir que ocupe todo el espacio disponible */
@@ -288,26 +288,26 @@
             overflow-x: auto; /* Habilitar desplazamiento horizontal */
         }
         @media (max-width: 1200px) {
-            #data-table-container {
+            #data-table-container, #data-table-container-moda {
                 max-height: 500px; /* Altura máxima en pantallas medianas */
             }
         }
         @media (max-width: 768px) {
-            #data-table-container {
+            #data-table-container, #data-table-container-moda {
                 max-height: 300px; /* Altura máxima en pantallas pequeñas */
             }
         }
         @media (max-width: 576px) {
-            #data-table-container {
+            #data-table-container, #data-table-container-moda {
                 max-height: 200px; /* Altura máxima en pantallas muy pequeñas */
             }
         }
-        #data-table {
+        #data-table, #data-table-moda {
             min-width: 100%; /* Ajustar el ancho mínimo al contenedor */
             border-collapse: collapse; /* Eliminar espacios entre bordes */
             width: 100%; /* Ajustar la tabla al ancho del contenedor */
         }
-        #data-table thead th {
+        #data-table thead th, #data-table-moda thead th {
             position: sticky; /* Fijar la cabecera */
             bottom: 0; /* Mantenerla en la parte inferior */
             z-index: 1; /* Asegurar que esté por encima del contenido */
@@ -316,20 +316,20 @@
             text-align: center;
             padding: 10px;
         }
-        #data-table tbody td {
+        #data-table tbody td, #data-table-moda tbody td {
             text-align: center; /* Centrar el contenido de las celdas */
         }
-        #sales-container .card {
+        #sales-container .card, #sales-container-moda .card {
             width: 100%; /* Ocupa todo el ancho de la página */
             max-width: none; /* Elimina el límite de ancho máximo */
             padding: 40px; /* Mantener el padding interno */
             height: 720px; /* Aumentar la altura del formulario */
         }
-        #filter-input {
+        #filter-input, #filter-input-moda {
             font-size: 1.2rem; /* Aumentar el tamaño de la fuente del campo de entrada */
             padding: 10px; /* Aumentar el padding del campo de entrada */
         }
-        #filter-label {
+        #filter-label, #filter-label-moda {
             font-size: 1.1rem; /* Aumentar el tamaño de la fuente de la etiqueta */
         }
         .card {
@@ -388,11 +388,20 @@
             <ul id="menu-list" class="menu-list">
                 <li class="menu-item active" onclick="showQRGenerator()">
                     <i class="fas fa-qrcode"></i>
-                    <span>Generador de QR</span>
+                    <span>Resurtidos</span>
                 </li>
                 <li class="menu-item" onclick="showSales()">
                     <i class="fas fa-chart-line"></i>
-                    <span>Ventas</span>
+                    <span>Etiquetas "Resurtidos"</span>
+                </li>
+                <!-- Botones para Moda -->
+                <li class="menu-item" onclick="showQRGeneratorModa()">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Moda</span>
+                </li>
+                <li class="menu-item" onclick="showSalesModa()">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Etiquetas Moda</span>
                 </li>
             </ul>
         </nav>
@@ -404,178 +413,137 @@
             </header>
 
             <main class="main-content">
+                <!-- Generador de QR Resurtidos -->
+                <section id="qr-generator" class="container" style="display: block;">
+                    <div class="card p-5 mx-auto shadow-lg border-0" style="width: 100%; max-width: 1000px; border-radius: 20px; background: #ffffff;">
+                        <h2 class="text-center mb-4" style="font-weight: 600; color: #2c3e50;">Subir Archivo Excel</h2>
+                        <div class="d-flex flex-column align-items-center justify-content-center" 
+                            style="border: 2px dashed #3498db; padding: 50px; border-radius: 15px; background-color: #f0f8ff; transition: background-color 0.3s ease; cursor: pointer;" 
+                            id="drop-area" 
+                            aria-labelledby="drop-area-label" 
+                            role="region">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#3498db" class="mb-3" viewBox="0 0 16 16">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5-.4h5.6l.9-.9a.5.5 0 0 1 .7 0l.9.9h5.6a.5.5 0 0 1 0 1H9.1l-.9.9a.5.5 0 0 1-.7 0l-.9-.9H1a.5.5 0 0 1-.5-.5z"/>
+                                <path d="M1 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V13z"/>
+                            </svg>
+                            <label for="excel-file" class="form-label fs-5 text-center" id="drop-area-label" style="color: #2c3e50;">
+                                Arrastra y suelta un archivo Excel aquí o haz clic para seleccionarlo
+                            </label>
+                            <input type="file" id="excel-file" class="form-control w-50 mt-3" accept=".xlsx, .xls" onchange="handleExcelUpload()" 
+                                style="max-width: 400px; cursor: pointer;">
+                            <small class="form-text text-muted mt-2">Formatos permitidos: .xlsx, .xls</small>
+                        </div>
+                    </div>
+                </section>
 
+                <!-- Generador de QR Moda -->
+                <section id="qr-generator-moda" class="container" style="display: none;">
+                    <div class="card p-5 mx-auto shadow-lg border-0" style="width: 100%; max-width: 1000px; border-radius: 20px; background: #ffffff;">
+                        <h2 class="text-center mb-4" style="font-weight: 600; color: #2c3e50;">Subir Archivo Excel Moda</h2>
+                        <div class="d-flex flex-column align-items-center justify-content-center"
+                            style="border: 2px dashed #e91e63; padding: 50px; border-radius: 15px; background-color: #fce4ec; transition: background-color 0.3s ease; cursor: pointer;"
+                            id="drop-area-moda"
+                            aria-labelledby="drop-area-label-moda"
+                            role="region">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#e91e63" class="mb-3" viewBox="0 0 16 16">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5-.4h5.6l.9-.9a.5.5 0 0 1 .7 0l.9.9h5.6a.5.5 0 0 1 0 1H9.1l-.9.9a.5.5 0 0 1-.7 0l-.9-.9H1a.5.5 0 0 1-.5-.5z"/>
+                                <path d="M1 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V13z"/>
+                            </svg>
+                            <label for="excel-file-moda" class="form-label fs-5 text-center" id="drop-area-label-moda" style="color: #2c3e50;">
+                                Arrastra y suelta un archivo Excel aquí o haz clic para seleccionarlo
+                            </label>
+                            <input type="file" id="excel-file-moda" class="form-control w-50 mt-3" accept=".xlsx, .xls" onchange="handleExcelUploadModa()"
+                                style="max-width: 400px; cursor: pointer;">
+                            <small class="form-text text-muted mt-2">Formatos permitidos: .xlsx, .xls</small>
+                        </div>
+                    </div>
+                </section>
 
-                
-                <!-- Generador de QR -->
-         
-<section id="qr-generator" class="container" style="display: block;">
-    <div class="card p-5 mx-auto shadow-lg border-0" style="width: 100%; max-width: 1000px; border-radius: 20px; background: #ffffff;">
-        <h2 class="text-center mb-4" style="font-weight: 600; color: #2c3e50;">Subir Archivo Excel</h2>
-
-        <div class="d-flex flex-column align-items-center justify-content-center" 
-             style="border: 2px dashed #3498db; padding: 50px; border-radius: 15px; background-color: #f0f8ff; transition: background-color 0.3s ease; cursor: pointer;" 
-             id="drop-area" 
-             aria-labelledby="drop-area-label" 
-             role="region">
-             
-            <!-- Ícono -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#3498db" class="mb-3" viewBox="0 0 16 16">
-                <path d="M.5 9.9a.5.5 0 0 1 .5-.4h5.6l.9-.9a.5.5 0 0 1 .7 0l.9.9h5.6a.5.5 0 0 1 0 1H9.1l-.9.9a.5.5 0 0 1-.7 0l-.9-.9H1a.5.5 0 0 1-.5-.5z"/>
-                <path d="M1 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V13z"/>
-            </svg>
-
-            <!-- Texto de instrucción -->
-            <label for="excel-file" class="form-label fs-5 text-center" id="drop-area-label" style="color: #2c3e50;">
-                Arrastra y suelta un archivo Excel aquí o haz clic para seleccionarlo
-            </label>
-
-            <!-- Input de archivo -->
-            <input type="file" id="excel-file" class="form-control w-50 mt-3" accept=".xlsx, .xls" onchange="handleExcelUpload()" 
-                   style="max-width: 400px; cursor: pointer;">
-            <small class="form-text text-muted mt-2">Formatos permitidos: .xlsx, .xls</small>
-        </div>
-    </div>
-</section>
-
-<!-- Scripts para mejorar la interacción de arrastre y soltado -->
-<script>
-    // Añadir soporte de arrastre y soltado para mejorar la experiencia de usuario
-    const dropArea = document.getElementById('drop-area');
-    const fileInput = document.getElementById('excel-file');
-
-    // Cambiar el fondo cuando se arrastra un archivo
-    dropArea.addEventListener('dragover', (event) => {
-        event.preventDefault();
-        dropArea.style.backgroundColor = '#d4edda'; // Cambiar a verde claro durante el arrastre
-        dropArea.style.borderColor = '#28a745'; // Cambiar el borde a verde
-    });
-
-    // Restaurar el fondo cuando el archivo deja el área de arrastre
-    dropArea.addEventListener('dragleave', () => {
-        dropArea.style.backgroundColor = '#f0f8ff'; // Restaurar el fondo original
-        dropArea.style.borderColor = '#3498db'; // Restaurar el borde original
-    });
-
-    // Cuando se suelta el archivo, verificar y manejarlo
-    dropArea.addEventListener('drop', (event) => {
-        event.preventDefault();
-        const file = event.dataTransfer.files[0];
-        if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
-            fileInput.files = event.dataTransfer.files;
-            handleExcelUpload(); // Llamar la función para manejar el archivo
-        } else {
-            alert('Por favor, sube un archivo Excel válido (.xlsx, .xls)');
-        }
-    });
-
-    // Detectar cuando se seleccione un archivo
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            // Cambiar el fondo a un color verde cuando se selecciona un archivo
-            dropArea.style.backgroundColor = '#d4edda'; // Color verde claro
-            dropArea.style.borderColor = '#28a745'; // Cambiar color de borde a verde
-        }
-    });
-
-    // Función para manejar la carga del archivo
-    function handleExcelUpload() {
-        const file = fileInput.files[0];
-        if (file) {
-            console.log('Archivo cargado: ', file.name);
-        }
-    }
-</script>
-
-
-
-
-
-
-
-                <!-- Ventas -->
+                <!-- Ventas Resurtidos -->
                 <section id="sales-container" class="container-fluid" style="display: none; height: 100vh;">
                     <div class="card p-4 h-100">
-        <h2 class="text-center">Impresión de códigos</h2>
+                        <h2 class="text-center">Impresión de códigos</h2>
+                        <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
+                            <button class="btn btn-secondary" onclick="showUniqueModels()">Modelos</button>
+                            <select id="model-select" class="form-select" style="display: none; width: auto;" onchange="filterByModel()">
+                                <option value="">Selecciona un modelo</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
+                            <button class="btn btn-secondary" onclick="showUniqueStores()">Tiendas</button>
+                            <select id="store-select" class="form-select" style="display: none; width: auto;" onchange="filterByStore()">
+                                <option value="">Selecciona una tienda</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
+                            <button class="btn btn-secondary" onclick="showUniqueCedis()">Cedis</button>
+                            <select id="cedis-select" class="form-select" style="display: none; width: auto;" onchange="filterByCedis()">
+                                <option value="">Selecciona un cedis</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter" onclick="clearCedisFilter()">Quitar filtro</button>
+                            <button class="btn btn-primary ms-auto" onclick="printContainer()">Imprimir</button>
+                        </div>
+                        <div id="print-container" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
+                        </div>
+                        <div id="data-table-container">
+                        </div>
+                    </div>
+                </section>
 
-        <!-- Filtros (alineados horizontalmente) -->
-        <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
-            <!-- Modelos -->
-            <button class="btn btn-secondary" onclick="showUniqueModels()">Modelos</button>
-            <select id="model-select" class="form-select" style="display: none; width: auto;" onchange="filterByModel()">
-                <option value="">Selecciona un modelo</option>
-            </select>
-            <button class="btn btn-danger" style="display: none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
-
-            <!-- Tiendas -->
-            <button class="btn btn-secondary" onclick="showUniqueStores()">Tiendas</button>
-            <select id="store-select" class="form-select" style="display: none; width: auto;" onchange="filterByStore()">
-                <option value="">Selecciona una tienda</option>
-            </select>
-            <button class="btn btn-danger" style="display: none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
-
-            <!-- Cedis -->
-            <button class="btn btn-secondary" onclick="showUniqueCedis()">Cedis</button>
-            <select id="cedis-select" class="form-select" style="display: none; width: auto;" onchange="filterByCedis()">
-                <option value="">Selecciona un cedis</option>
-            </select>
-            <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter" onclick="clearCedisFilter()">Quitar filtro</button>
-
-            <!-- Botón Imprimir alineado a la derecha (usando ms-auto) -->
-            <button class="btn btn-primary ms-auto" onclick="printContainer()">Imprimir</button>
-        </div>
-
-        <!-- Área de impresión -->
-        <div id="print-container" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
-            <!-- Contenido dinámico generado por JavaScript -->
-        </div>
-
-        <!-- Tabla de datos -->
-        <div id="data-table-container">
-            <!-- Contenedor con desplazamiento vertical -->
-        </div>
-    </div>
-</section>
-
-
-
-
-                
+                <!-- Ventas Moda -->
+                <section id="sales-container-moda" class="container-fluid" style="display: none; height: 100vh;">
+                    <div class="card p-4 h-100">
+                        <h2 class="text-center">Impresión de códigos Moda</h2>
+                        <!-- Filtros Moda -->
+                        <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
+                            <button class="btn btn-secondary" onclick="showUniqueModelsModa()">Modelos</button>
+                            <select id="model-select-moda" class="form-select" style="display: none; width: auto;" onchange="filterByModelModa()">
+                                <option value="">Selecciona un modelo</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-model-filter-moda" onclick="clearModelFilterModa()">Quitar filtro</button>
+                            <button class="btn btn-secondary" onclick="showUniqueStoresModa()">Tiendas</button>
+                            <select id="store-select-moda" class="form-select" style="display: none; width: auto;" onchange="filterByStoreModa()">
+                                <option value="">Selecciona una tienda</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-store-filter-moda" onclick="clearStoreFilterModa()">Quitar filtro</button>
+                            <button class="btn btn-secondary" onclick="showUniqueCedisModa()">Cedis</button>
+                            <select id="cedis-select-moda" class="form-select" style="display: none; width: auto;" onchange="filterByCedisModa()">
+                                <option value="">Selecciona un cedis</option>
+                            </select>
+                            <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter-moda" onclick="clearCedisFilterModa()">Quitar filtro</button>
+                            <button class="btn btn-primary ms-auto" onclick="printContainerModa()">Imprimir</button>
+                        </div>
+                        <div id="print-container-moda" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
+                        </div>
+                        <div id="data-table-container-moda">
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
     </div>
 
     <!-- Modal para impresión -->
-   <!-- Modal para impresión -->
-   <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header d-flex justify-content-between align-items-center">
-                <h5 class="modal-title mb-0" id="printModalLabel">Previsualización de impresión</h5>
-                <div>
-                    <!-- Primero va el de imprimir -->
-                    <button type="button" class="btn btn-primary me-2" onclick="printModalLabels()">
-                        <i class="bi bi-printer me-1"></i> Imprimir
-                    </button>
-                    <!-- Luego el de cerrar -->
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i> Cerrar
-                    </button>
+    <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title mb-0" id="printModalLabel">Previsualización de impresión</h5>
+                    <div>
+                        <button type="button" class="btn btn-primary me-2" onclick="printModalLabels()">
+                            <i class="bi bi-printer me-1"></i> Imprimir
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i> Cerrar
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <div id="modal-label-container" 
-                     style="width: 80mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; border: 1px solid #ccc; padding: 10px;">
-                    <!-- Aquí van las cards -->
+                <div class="modal-body">
+                    <div id="modal-label-container" 
+                        style="width: 80mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; border: 1px solid #ccc; padding: 10px;">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
-
-    
 
     <footer class="footer">
         <p>&copy; 2025 Impresion de Códigos QR Ferreira. Todos los derechos reservados.</p>
@@ -589,25 +557,18 @@
         function deleteRow(button) {
             const row = button.closest('tr');
             const table = row.closest('table');
-            const titleElement = table.previousElementSibling; // Elemento del título
+            const titleElement = table.previousElementSibling;
             const piezas = parseInt(row.children[9]?.textContent || 0);
-
-            // Actualizar el total de piezas
             const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
             if (totalMatch) {
                 const totalActual = parseInt(totalMatch[1]);
                 const nuevoTotal = totalActual - piezas;
-
-                // Actualizar el título con el mismo diseño
                 titleElement.innerHTML = titleElement.innerHTML.replace(
                     /<strong>Total de piezas:<\/strong> \d+/,
                     `<strong>Total de piezas:</strong> ${nuevoTotal}`
                 );
             }
-
-            row.remove(); // Eliminar la fila
-
-            // Mostrar notificación
+            row.remove();
             showNotification('Se eliminó correctamente.', 'info');
         }
 
@@ -615,7 +576,6 @@
             const fileInput = document.getElementById('excel-file');
             const file = fileInput.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function (e) {
                 const data = new Uint8Array(e.target.result);
@@ -623,37 +583,26 @@
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
                 const container = document.getElementById('data-table-container');
-                container.innerHTML = ''; // Limpiar contenedor principal
-
-                // Obtener encabezados
+                container.innerHTML = '';
                 const headers = jsonData[0];
-
-                // Agrupar datos por valores de la tercera y cuarta columna
                 const groupedData = {};
                 jsonData.slice(1).forEach(row => {
-                    const key = `${row[2]} - ${row[3]}`; // Combinar tercera y cuarta columna como clave
+                    const key = `${row[2]} - ${row[3]}`;
                     if (!groupedData[key]) {
                         groupedData[key] = [];
                     }
                     groupedData[key].push(row);
                 });
-
-                // Crear tablas por cada grupo
                 Object.keys(groupedData).forEach(key => {
                     const groupContainer = document.createElement('div');
                     groupContainer.classList.add('group-container', 'mb-4');
-
-                    const [cedis, tienda] = key.split(' - '); // Separar valores de la clave
-                    const pedido = groupedData[key][0][1]; // Obtener el valor único de la segunda columna
-
-                    // Calcular el total de piezas (columna 10)
+                    const [cedis, tienda] = key.split(' - ');
+                    const pedido = groupedData[key][0][1];
                     const totalPiezas = groupedData[key].reduce((sum, row) => sum + (parseInt(row[9]) || 0), 0);
-
                     const title = document.createElement('div');
                     title.classList.add('d-flex', 'justify-content-around', 'align-items-center', 'mb-3', 'p-2', 'bg-light', 'rounded', 'shadow-sm');
-                    title.style.gap = '20px'; // Espaciado entre los elementos
+                    title.style.gap = '20px';
                     title.innerHTML = `
                         <div><strong>Cedis:</strong> ${cedis}</div>
                         <div><strong>Tienda:</strong> ${tienda}</div>
@@ -661,11 +610,9 @@
                         <div><strong>Total de piezas:</strong> ${totalPiezas}</div>
                     `;
                     groupContainer.appendChild(title);
-
                     const table = document.createElement('table');
                     table.classList.add('table', 'table-striped');
                     groupContainer.appendChild(table);
-
                     const thead = document.createElement('thead');
                     const headerRow = document.createElement('tr');
                     headers.forEach((header, index) => {
@@ -675,24 +622,21 @@
                         th.style.color = 'white';
                         th.style.textAlign = 'center';
                         th.style.padding = '10px';
-                        if (index === 0 || index === 1) th.style.display = 'none'; // Ocultar columnas 1 y 2
+                        if (index === 0 || index === 1) th.style.display = 'none';
                         headerRow.appendChild(th);
                     });
                     thead.appendChild(headerRow);
                     table.appendChild(thead);
-
                     const tbody = document.createElement('tbody');
                     groupedData[key].forEach(row => {
                         const tr = document.createElement('tr');
                         row.forEach((cell, index) => {
                             const td = document.createElement('td');
                             td.textContent = cell;
-                            if (index === 0 || index === 1) td.style.display = 'none'; // Ocultar columnas 1 y 2
-                            if (index === 9) td.setAttribute('contenteditable', 'false'); // Hacer la columna 10 no editable por defecto
+                            if (index === 0 || index === 1) td.style.display = 'none';
+                            if (index === 9) td.setAttribute('contenteditable', 'false');
                             tr.appendChild(td);
                         });
-
-                        // Agregar columna de acciones con los botones
                         const actionTd = document.createElement('td');
                         actionTd.innerHTML = `
                             <button class="btn btn-warning btn-sm" onclick="enableEdit(this)">
@@ -703,11 +647,93 @@
                             </button>
                         `;
                         tr.appendChild(actionTd);
-
                         tbody.appendChild(tr);
                     });
                     table.appendChild(tbody);
+                    container.appendChild(groupContainer);
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        }
 
+        function handleExcelUploadModa() {
+            const fileInputModa = document.getElementById('excel-file-moda');
+            const file = fileInputModa.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                const container = document.getElementById('data-table-container-moda');
+                container.innerHTML = '';
+                const headers = jsonData[0];
+                const groupedData = {};
+                jsonData.slice(1).forEach(row => {
+                    const key = `${row[2]} - ${row[3]}`;
+                    if (!groupedData[key]) {
+                        groupedData[key] = [];
+                    }
+                    groupedData[key].push(row);
+                });
+                Object.keys(groupedData).forEach(key => {
+                    const groupContainer = document.createElement('div');
+                    groupContainer.classList.add('group-container', 'mb-4');
+                    const [cedis, tienda] = key.split(' - ');
+                    const pedido = groupedData[key][0][1];
+                    const totalPiezas = groupedData[key].reduce((sum, row) => sum + (parseInt(row[9]) || 0), 0);
+                    const title = document.createElement('div');
+                    title.classList.add('d-flex', 'justify-content-around', 'align-items-center', 'mb-3', 'p-2', 'bg-light', 'rounded', 'shadow-sm');
+                    title.style.gap = '20px';
+                    title.innerHTML = `
+                        <div><strong>Cedis:</strong> ${cedis}</div>
+                        <div><strong>Tienda:</strong> ${tienda}</div>
+                        <div><strong>Pedido:</strong> ${pedido}</div>
+                        <div><strong>Total de piezas:</strong> ${totalPiezas}</div>
+                    `;
+                    groupContainer.appendChild(title);
+                    const table = document.createElement('table');
+                    table.classList.add('table', 'table-striped');
+                    groupContainer.appendChild(table);
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    headers.forEach((header, index) => {
+                        const th = document.createElement('th');
+                        th.textContent = header;
+                        th.style.backgroundColor = '#e91e63';
+                        th.style.color = 'white';
+                        th.style.textAlign = 'center';
+                        th.style.padding = '10px';
+                        if (index === 0 || index === 1) th.style.display = 'none';
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+                    const tbody = document.createElement('tbody');
+                    groupedData[key].forEach(row => {
+                        const tr = document.createElement('tr');
+                        row.forEach((cell, index) => {
+                            const td = document.createElement('td');
+                            td.textContent = cell;
+                            if (index === 0 || index === 1) td.style.display = 'none';
+                            if (index === 9) td.setAttribute('contenteditable', 'false');
+                            tr.appendChild(td);
+                        });
+                        const actionTd = document.createElement('td');
+                        actionTd.innerHTML = `
+                            <button class="btn btn-warning btn-sm" onclick="enableEditModa(this)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteRowModa(this)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        `;
+                        tr.appendChild(actionTd);
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
                     container.appendChild(groupContainer);
                 });
             };
@@ -716,28 +742,22 @@
 
         function enableEdit(button) {
             const row = button.closest('tr');
-            const editableCell = row.children[9]; // Seleccionar la columna 10
+            const editableCell = row.children[9];
             const table = row.closest('table');
-            const titleElement = table.previousElementSibling; // Elemento del título
-
+            const titleElement = table.previousElementSibling;
             if (editableCell) {
                 const originalValue = parseInt(editableCell.textContent) || 0;
                 editableCell.setAttribute('contenteditable', 'true');
                 editableCell.focus();
                 editableCell.style.backgroundColor = '#fff3cd';
-
                 editableCell.addEventListener('blur', () => {
                     editableCell.setAttribute('contenteditable', 'false');
                     editableCell.style.backgroundColor = '';
-
                     const newValue = parseInt(editableCell.textContent) || 0;
                     const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
-
                     if (totalMatch) {
                         const totalActual = parseInt(totalMatch[1]);
                         const nuevoTotal = totalActual - originalValue + newValue;
-
-                        // Actualizar el título con el mismo diseño
                         titleElement.innerHTML = titleElement.innerHTML.replace(
                             /<strong>Total de piezas:<\/strong> \d+/,
                             `<strong>Total de piezas:</strong> ${nuevoTotal}`
@@ -745,6 +765,51 @@
                     }
                 });
             }
+        }
+
+        function enableEditModa(button) {
+            const row = button.closest('tr');
+            const editableCell = row.children[9];
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling;
+            if (editableCell) {
+                const originalValue = parseInt(editableCell.textContent) || 0;
+                editableCell.setAttribute('contenteditable', 'true');
+                editableCell.focus();
+                editableCell.style.backgroundColor = '#fff3cd';
+                editableCell.addEventListener('blur', () => {
+                    editableCell.setAttribute('contenteditable', 'false');
+                    editableCell.style.backgroundColor = '';
+                    const newValue = parseInt(editableCell.textContent) || 0;
+                    const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
+                    if (totalMatch) {
+                        const totalActual = parseInt(totalMatch[1]);
+                        const nuevoTotal = totalActual - originalValue + newValue;
+                        titleElement.innerHTML = titleElement.innerHTML.replace(
+                            /<strong>Total de piezas:<\/strong> \d+/,
+                            `<strong>Total de piezas:</strong> ${nuevoTotal}`
+                        );
+                    }
+                });
+            }
+        }
+
+        function deleteRowModa(button) {
+            const row = button.closest('tr');
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling;
+            const piezas = parseInt(row.children[9]?.textContent || 0);
+            const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
+            if (totalMatch) {
+                const totalActual = parseInt(totalMatch[1]);
+                const nuevoTotal = totalActual - piezas;
+                titleElement.innerHTML = titleElement.innerHTML.replace(
+                    /<strong>Total de piezas:<\/strong> \d+/,
+                    `<strong>Total de piezas:</strong> ${nuevoTotal}`
+                );
+            }
+            row.remove();
+            showNotification('Se eliminó correctamente.', 'info');
         }
 
         function toggleMenu() {
@@ -763,205 +828,313 @@
         function setActiveMenuItem(selectedItem) {
             const menuItems = document.querySelectorAll('.menu-item');
             menuItems.forEach(item => {
-                item.classList.remove('active'); // Quitar la clase activa de todos los botones
+                item.classList.remove('active');
             });
-            selectedItem.classList.add('active'); // Agregar la clase activa al botón seleccionado
+            selectedItem.classList.add('active');
         }
 
         function showQRGenerator() {
-            setActiveMenuItem(document.querySelector('.menu-item:nth-child(1)')); // Activar el primer botón
+            setActiveMenuItem(document.querySelector('.menu-item:nth-child(1)'));
             document.getElementById('qr-generator').style.display = 'block';
             document.getElementById('sales-container').style.display = 'none';
+            document.getElementById('qr-generator-moda').style.display = 'none';
+            document.getElementById('sales-container-moda').style.display = 'none';
         }
 
         function showSales() {
-            setActiveMenuItem(document.querySelector('.menu-item:nth-child(2)')); // Activar el segundo botón
+            setActiveMenuItem(document.querySelector('.menu-item:nth-child(2)'));
             document.getElementById('sales-container').style.display = 'block';
             document.getElementById('qr-generator').style.display = 'none';
+            document.getElementById('qr-generator-moda').style.display = 'none';
+            document.getElementById('sales-container-moda').style.display = 'none';
         }
 
-        function showUniqueModels() {
-            const tables = document.querySelectorAll('#data-table-container table');
-            const uniqueModels = new Set();
+        function showQRGeneratorModa() {
+            setActiveMenuItem(document.querySelector('.menu-item:nth-child(3)'));
+            document.getElementById('qr-generator').style.display = 'none';
+            document.getElementById('sales-container').style.display = 'none';
+            document.getElementById('qr-generator-moda').style.display = 'block';
+            document.getElementById('sales-container-moda').style.display = 'none';
+        }
 
+        function showSalesModa() {
+            setActiveMenuItem(document.querySelector('.menu-item:nth-child(4)'));
+            document.getElementById('sales-container').style.display = 'none';
+            document.getElementById('qr-generator').style.display = 'none';
+            document.getElementById('qr-generator-moda').style.display = 'none';
+            document.getElementById('sales-container-moda').style.display = 'block';
+        }
+
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('excel-file');
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.style.backgroundColor = '#a5d6a7'; // verde claro
+            dropArea.style.borderColor = '#388e3c'; // verde oscuro
+        });
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.style.backgroundColor = '#f0f8ff';
+            dropArea.style.borderColor = '#3498db';
+        });
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            const file = event.dataTransfer.files[0];
+            if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+                fileInput.files = event.dataTransfer.files;
+                dropArea.style.backgroundColor = '#a5d6a7'; // verde claro
+                dropArea.style.borderColor = '#388e3c'; // verde oscuro
+                handleExcelUpload();
+            } else {
+                alert('Por favor, sube un archivo Excel válido (.xlsx, .xls)');
+            }
+        });
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                dropArea.style.backgroundColor = '#a5d6a7'; // verde claro
+                dropArea.style.borderColor = '#388e3c'; // verde oscuro
+            }
+        });
+
+        const dropAreaModa = document.getElementById('drop-area-moda');
+        const fileInputModa = document.getElementById('excel-file-moda');
+        dropAreaModa.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropAreaModa.style.backgroundColor = '#a5d6a7'; // verde claro
+            dropAreaModa.style.borderColor = '#388e3c'; // verde oscuro
+        });
+        dropAreaModa.addEventListener('dragleave', () => {
+            dropAreaModa.style.backgroundColor = '#fce4ec';
+            dropAreaModa.style.borderColor = '#e91e63';
+        });
+        dropAreaModa.addEventListener('drop', (event) => {
+            event.preventDefault();
+            const file = event.dataTransfer.files[0];
+            if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+                fileInputModa.files = event.dataTransfer.files;
+                dropAreaModa.style.backgroundColor = '#a5d6a7'; // verde claro
+                dropAreaModa.style.borderColor = '#388e3c'; // verde oscuro
+                handleExcelUploadModa();
+            } else {
+                alert('Por favor, sube un archivo Excel válido (.xlsx, .xls)');
+            }
+        });
+        fileInputModa.addEventListener('change', () => {
+            if (fileInputModa.files.length > 0) {
+                dropAreaModa.style.backgroundColor = '#a5d6a7'; // verde claro
+                dropAreaModa.style.borderColor = '#388e3c'; // verde oscuro
+            }
+        });
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification-popup alert alert-${type}`;
+            const icon = document.createElement('i');
+            icon.style.marginRight = '15px';
+            icon.style.fontSize = '1.5rem';
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+                icon.style.color = '#ffffff';
+                notification.style.background = 'rgba(76, 175, 80, 0.8)';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-times-circle';
+                icon.style.color = '#ffffff';
+                notification.style.background = 'rgba(244, 67, 54, 0.8)';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+                icon.style.color = '#ffffff';
+                notification.style.background = 'rgba(33, 150, 243, 0.8)';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-circle';
+                icon.style.color = '#000000';
+                notification.style.background = 'rgba(255, 193, 7, 0.8)';
+                notification.style.color = '#212529';
+            }
+            notification.style.position = 'fixed';
+            notification.style.bottom = '-100px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '2000';
+            notification.style.minWidth = '350px';
+            notification.style.padding = '20px';
+            notification.style.borderRadius = '15px';
+            notification.style.fontWeight = 'bold';
+            notification.style.color = '#fff';
+            notification.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.4)';
+            notification.style.transition = 'bottom 0.6s ease, opacity 0.4s ease';
+            notification.style.backdropFilter = 'blur(10px)';
+            notification.appendChild(icon);
+            notification.appendChild(document.createTextNode(message));
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.bottom = '30px';
+            }, 100);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.bottom = '-100px';
+                setTimeout(() => notification.remove(), 600);
+            }, 4000);
+        }
+
+        // --- Filtros y funciones de impresión para MODA (idénticos a los de Resurtidos pero para los IDs *_moda) ---
+
+        function showUniqueModelsModa() {
+            const tables = document.querySelectorAll('#data-table-container-moda table');
+            const uniqueModels = new Set();
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const modelCell = row.children[5]; // Columna 6
+                    const modelCell = row.children[5];
                     if (modelCell) uniqueModels.add(modelCell.textContent.trim());
                 });
             });
-
-            const modelSelect = document.getElementById('model-select');
-            modelSelect.innerHTML = '<option value="">Selecciona un modelo</option>'; // Resetear opciones
+            const modelSelect = document.getElementById('model-select-moda');
+            modelSelect.innerHTML = '<option value="">Selecciona un modelo</option>';
             uniqueModels.forEach(model => {
                 const option = document.createElement('option');
                 option.value = model;
                 option.textContent = model;
                 modelSelect.appendChild(option);
             });
-
-            modelSelect.style.display = 'block'; // Mostrar el selector
-            document.getElementById('clear-model-filter').style.display = 'block'; // Mostrar el botón de quitar filtro
+            modelSelect.style.display = 'block';
+            document.getElementById('clear-model-filter-moda').style.display = 'block';
         }
 
-        function filterByModel() {
-            const selectedModel = document.getElementById('model-select').value;
-            const tables = document.querySelectorAll('#data-table-container .group-container');
-
+        function filterByModelModa() {
+            const selectedModel = document.getElementById('model-select-moda').value;
+            const tables = document.querySelectorAll('#data-table-container-moda .group-container');
             tables.forEach(group => {
                 const table = group.querySelector('table');
                 let hasVisibleRows = false;
-
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const modelCell = row.children[5]; // Columna 6
+                    const modelCell = row.children[5];
                     if (modelCell) {
                         const isVisible = selectedModel ? modelCell.textContent.trim() === selectedModel : true;
                         row.style.display = isVisible ? '' : 'none';
                         if (isVisible) hasVisibleRows = true;
                     }
                 });
-
-                group.style.display = hasVisibleRows ? '' : 'none'; // Mostrar u ocultar la tabla completa
+                group.style.display = hasVisibleRows ? '' : 'none';
             });
         }
 
-        function clearModelFilter() {
-            document.getElementById('model-select').value = ''; // Resetear el selector
-            filterByModel(); // Aplicar el filtro vacío para mostrar todas las filas
-            document.getElementById('clear-model-filter').style.display = 'none'; // Ocultar el botón de quitar filtro
+        function clearModelFilterModa() {
+            document.getElementById('model-select-moda').value = '';
+            filterByModelModa();
+            document.getElementById('clear-model-filter-moda').style.display = 'none';
         }
 
-        function showUniqueStores() {
-            const tables = document.querySelectorAll('#data-table-container table');
+        function showUniqueStoresModa() {
+            const tables = document.querySelectorAll('#data-table-container-moda table');
             const uniqueStores = new Set();
-
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const storeCell = row.children[3]; // Columna 4
+                    const storeCell = row.children[3];
                     if (storeCell) uniqueStores.add(storeCell.textContent.trim());
                 });
             });
-
-            const storeSelect = document.getElementById('store-select');
-            storeSelect.innerHTML = '<option value="">Selecciona una tienda</option>'; // Resetear opciones
+            const storeSelect = document.getElementById('store-select-moda');
+            storeSelect.innerHTML = '<option value="">Selecciona una tienda</option>';
             uniqueStores.forEach(store => {
                 const option = document.createElement('option');
                 option.value = store;
                 option.textContent = store;
                 storeSelect.appendChild(option);
             });
-
-            storeSelect.style.display = 'block'; // Mostrar el selector
-            document.getElementById('clear-store-filter').style.display = 'block'; // Mostrar el botón de quitar filtro
+            storeSelect.style.display = 'block';
+            document.getElementById('clear-store-filter-moda').style.display = 'block';
         }
 
-        function filterByStore() {
-            const selectedStore = document.getElementById('store-select').value;
-            const tables = document.querySelectorAll('#data-table-container .group-container');
-
+        function filterByStoreModa() {
+            const selectedStore = document.getElementById('store-select-moda').value;
+            const tables = document.querySelectorAll('#data-table-container-moda .group-container');
             tables.forEach(group => {
                 const table = group.querySelector('table');
                 let hasVisibleRows = false;
-
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const storeCell = row.children[3]; // Columna 4
+                    const storeCell = row.children[3];
                     if (storeCell) {
                         const isVisible = selectedStore ? storeCell.textContent.trim() === selectedStore : true;
                         row.style.display = isVisible ? '' : 'none';
                         if (isVisible) hasVisibleRows = true;
                     }
                 });
-
-                group.style.display = hasVisibleRows ? '' : 'none'; // Mostrar u ocultar la tabla completa
+                group.style.display = hasVisibleRows ? '' : 'none';
             });
         }
 
-        function clearStoreFilter() {
-            document.getElementById('store-select').value = ''; // Resetear el selector
-            filterByStore(); // Aplicar el filtro vacío para mostrar todas las filas
-            document.getElementById('clear-store-filter').style.display = 'none'; // Ocultar el botón de quitar filtro
+        function clearStoreFilterModa() {
+            document.getElementById('store-select-moda').value = '';
+            filterByStoreModa();
+            document.getElementById('clear-store-filter-moda').style.display = 'none';
         }
 
-        function showUniqueCedis() {
-            const tables = document.querySelectorAll('#data-table-container table');
+        function showUniqueCedisModa() {
+            const tables = document.querySelectorAll('#data-table-container-moda table');
             const uniqueCedis = new Set();
-
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const cedisCell = row.children[2]; // Columna 3
+                    const cedisCell = row.children[2];
                     if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
                 });
             });
-
-            const cedisSelect = document.getElementById('cedis-select');
-            cedisSelect.innerHTML = '<option value="">Selecciona un cedis</option>'; // Resetear opciones
+            const cedisSelect = document.getElementById('cedis-select-moda');
+            cedisSelect.innerHTML = '<option value="">Selecciona un cedis</option>';
             uniqueCedis.forEach(cedis => {
                 const option = document.createElement('option');
                 option.value = cedis;
                 option.textContent = cedis;
                 cedisSelect.appendChild(option);
             });
-
-            cedisSelect.style.display = 'block'; // Mostrar el selector
-            document.getElementById('clear-cedis-filter').style.display = 'block'; // Mostrar el botón de quitar filtro
+            cedisSelect.style.display = 'block';
+            document.getElementById('clear-cedis-filter-moda').style.display = 'block';
         }
 
-        function filterByCedis() {
-            const selectedCedis = document.getElementById('cedis-select').value;
-            const tables = document.querySelectorAll('#data-table-container .group-container');
-
+        function filterByCedisModa() {
+            const selectedCedis = document.getElementById('cedis-select-moda').value;
+            const tables = document.querySelectorAll('#data-table-container-moda .group-container');
             tables.forEach(group => {
                 const table = group.querySelector('table');
                 let hasVisibleRows = false;
-
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const cedisCell = row.children[2]; // Columna 3
+                    const cedisCell = row.children[2];
                     if (cedisCell) {
                         const isVisible = selectedCedis ? cedisCell.textContent.trim() === selectedCedis : true;
                         row.style.display = isVisible ? '' : 'none';
                         if (isVisible) hasVisibleRows = true;
                     }
                 });
-
-                group.style.display = hasVisibleRows ? '' : 'none'; // Mostrar u ocultar la tabla completa
+                group.style.display = hasVisibleRows ? '' : 'none';
             });
         }
 
-        function clearCedisFilter() {
-            document.getElementById('cedis-select').value = ''; // Resetear el selector
-            filterByCedis(); // Aplicar el filtro vacío para mostrar todas las filas
-            document.getElementById('clear-cedis-filter').style.display = 'none'; // Ocultar el botón de quitar filtro
+        function clearCedisFilterModa() {
+            document.getElementById('cedis-select-moda').value = '';
+            filterByCedisModa();
+            document.getElementById('clear-cedis-filter-moda').style.display = 'none';
         }
 
-        function printContainer() {
-            const groups = document.querySelectorAll('#data-table-container .group-container');
+        function printContainerModa() {
+            const groups = document.querySelectorAll('#data-table-container-moda .group-container');
             const modalLabelContainer = document.getElementById('modal-label-container');
-            modalLabelContainer.innerHTML = ''; // Limpiar contenido previo
-
-            // Cambiar a bloque para mostrar tarjetas una debajo de otra
+            modalLabelContainer.innerHTML = '';
             const generalContainer = document.createElement('div');
-            generalContainer.style.display = 'block'; // Cambiado de 'flex' a 'block'
-
+            generalContainer.style.display = 'block';
             groups.forEach((group, idx) => {
                 const titleElement = group.querySelector('div');
                 const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];
                 const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];
                 const oc = titleElement.querySelector('div:nth-child(3)').textContent.split(': ')[1];
-
-                // Obtener códigos y cantidades de la tabla de este grupo
                 const table = group.querySelector('table');
                 const rows = table.querySelectorAll('tbody tr');
                 let codigosYcantidades = [];
                 let totalPiezas = 0;
                 rows.forEach(row => {
-                    const codigo = row.children[4]?.textContent.trim(); // Columna 8: Código
-                    const cantidad = row.children[9]?.textContent.trim(); // Columna 10: Cantidad
+                    const codigo = row.children[4]?.textContent.trim();
+                    const cantidad = row.children[9]?.textContent.trim();
                     if (codigo && cantidad) {
                         codigosYcantidades.push(codigo + '\n' + cantidad);
                         totalPiezas += parseInt(cantidad) || 0;
@@ -969,7 +1142,6 @@
                 });
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
-
                 const card = document.createElement('div');
                 card.classList.add('card', 'p-3', 'shadow-sm');
                 card.style.width = '120mm';
@@ -980,7 +1152,6 @@
                 card.style.alignItems = 'flex-start';
                 card.style.textAlign = 'left';
                 card.style.position = 'relative';
-
                 let cedisNombre = cedis;
                 if (cedis === '4188') {
                     cedisNombre = 'MÉRIDA 4188';
@@ -1001,7 +1172,262 @@
                 } else if (cedis === '7464') {
                     cedisNombre = 'CUAUTITLAN 7464';
                 }
+                card.innerHTML = `
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
+                        <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
+                        <div style="margin-top: 5px; font-size: 12px;">Proveedor: 627375</div>
+                        <div style="margin-top: 5px; font-size: 12px;">OC: <strong>${oc}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px;">Cedis: <strong>${cedisNombre}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; text-align: center;">
+                        <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
+                        <br>
+                        <strong>${tienda}</strong>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-width: 50px;">
+                        <div id="modal-qr-moda-${idx}" style="margin-bottom: 4px;"></div>
+                        <div style="
+                            margin-top: 1px;
+                            width: max-content;
+                            text-align: center;
+                            font-size: 0.9rem;
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                            background: rgba(240,240,240,0.7);
+                            border-radius: 6px;
+                            padding: 2px 5px 2px 8px;
+                        ">
+                            codigos: ${totalCodigos} / piezas: ${totalPiezas}
+                        </div>
+                    </div>
+                `;
+                generalContainer.appendChild(card);
+                setTimeout(() => {
+                    try {
+                        JsBarcode(`#modal-barcode-moda-${idx}`, tienda, {
+                            format: "CODE128",
+                            width: 2,
+                            height: 30,
+                            displayValue: false,
+                            margin: 0
+                        });
+                    } catch (e) {}
+                }, 0);
+                setTimeout(() => {
+                    const qrDiv = document.getElementById(`modal-qr-moda-${idx}`);
+                    if (qrDiv) {
+                        qrDiv.innerHTML = "";
+                        new QRCode(qrDiv, {
+                            text: qrText,
+                            width: 151,
+                            height: 151,
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                    }
+                }, 0);
+            });
+            modalLabelContainer.appendChild(generalContainer);
+            const printModal = new bootstrap.Modal(document.getElementById('printModal'));
+            printModal.show();
+        }
 
+        // Funciones de filtros e impresión para Etiquetas "Resurtidos"
+        function showUniqueModels() {
+            const tables = document.querySelectorAll('#data-table-container table');
+            const uniqueModels = new Set();
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const modelCell = row.children[5];
+                    if (modelCell) uniqueModels.add(modelCell.textContent.trim());
+                });
+            });
+            const modelSelect = document.getElementById('model-select');
+            modelSelect.innerHTML = '<option value="">Selecciona un modelo</option>';
+            uniqueModels.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+            modelSelect.style.display = 'block';
+            document.getElementById('clear-model-filter').style.display = 'block';
+        }
+
+        function filterByModel() {
+            const selectedModel = document.getElementById('model-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const modelCell = row.children[5];
+                    if (modelCell) {
+                        const isVisible = selectedModel ? modelCell.textContent.trim() === selectedModel : true;
+                        row.style.display = isVisible ? '' : 'none';
+                        if (isVisible) hasVisibleRows = true;
+                    }
+                });
+                group.style.display = hasVisibleRows ? '' : 'none';
+            });
+        }
+
+        function clearModelFilter() {
+            document.getElementById('model-select').value = '';
+            filterByModel();
+            document.getElementById('clear-model-filter').style.display = 'none';
+        }
+
+        function showUniqueStores() {
+            const tables = document.querySelectorAll('#data-table-container table');
+            const uniqueStores = new Set();
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const storeCell = row.children[3];
+                    if (storeCell) uniqueStores.add(storeCell.textContent.trim());
+                });
+            });
+            const storeSelect = document.getElementById('store-select');
+            storeSelect.innerHTML = '<option value="">Selecciona una tienda</option>';
+            uniqueStores.forEach(store => {
+                const option = document.createElement('option');
+                option.value = store;
+                option.textContent = store;
+                storeSelect.appendChild(option);
+            });
+            storeSelect.style.display = 'block';
+            document.getElementById('clear-store-filter').style.display = 'block';
+        }
+
+        function filterByStore() {
+            const selectedStore = document.getElementById('store-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const storeCell = row.children[3];
+                    if (storeCell) {
+                        const isVisible = selectedStore ? storeCell.textContent.trim() === selectedStore : true;
+                        row.style.display = isVisible ? '' : 'none';
+                        if (isVisible) hasVisibleRows = true;
+                    }
+                });
+                group.style.display = hasVisibleRows ? '' : 'none';
+            });
+        }
+
+        function clearStoreFilter() {
+            document.getElementById('store-select').value = '';
+            filterByStore();
+            document.getElementById('clear-store-filter').style.display = 'none';
+        }
+
+        function showUniqueCedis() {
+            const tables = document.querySelectorAll('#data-table-container table');
+            const uniqueCedis = new Set();
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cedisCell = row.children[2];
+                    if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
+                });
+            });
+            const cedisSelect = document.getElementById('cedis-select');
+            cedisSelect.innerHTML = '<option value="">Selecciona un cedis</option>';
+            uniqueCedis.forEach(cedis => {
+                const option = document.createElement('option');
+                option.value = cedis;
+                option.textContent = cedis;
+                cedisSelect.appendChild(option);
+            });
+            cedisSelect.style.display = 'block';
+            document.getElementById('clear-cedis-filter').style.display = 'block';
+        }
+
+        function filterByCedis() {
+            const selectedCedis = document.getElementById('cedis-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cedisCell = row.children[2];
+                    if (cedisCell) {
+                        const isVisible = selectedCedis ? cedisCell.textContent.trim() === selectedCedis : true;
+                        row.style.display = isVisible ? '' : 'none';
+                        if (isVisible) hasVisibleRows = true;
+                    }
+                });
+                group.style.display = hasVisibleRows ? '' : 'none';
+            });
+        }
+
+        function clearCedisFilter() {
+            document.getElementById('cedis-select').value = '';
+            filterByCedis();
+            document.getElementById('clear-cedis-filter').style.display = 'none';
+        }
+
+        function printContainer() {
+            const groups = document.querySelectorAll('#data-table-container .group-container');
+            const modalLabelContainer = document.getElementById('modal-label-container');
+            modalLabelContainer.innerHTML = '';
+            const generalContainer = document.createElement('div');
+            generalContainer.style.display = 'block';
+            groups.forEach((group, idx) => {
+                const titleElement = group.querySelector('div');
+                const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];
+                const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];
+                const oc = titleElement.querySelector('div:nth-child(3)').textContent.split(': ')[1];
+                const table = group.querySelector('table');
+                const rows = table.querySelectorAll('tbody tr');
+                let codigosYcantidades = [];
+                let totalPiezas = 0;
+                rows.forEach(row => {
+                    const codigo = row.children[4]?.textContent.trim();
+                    const cantidad = row.children[9]?.textContent.trim();
+                    if (codigo && cantidad) {
+                        codigosYcantidades.push(codigo + '\n' + cantidad);
+                        totalPiezas += parseInt(cantidad) || 0;
+                    }
+                });
+                const qrText = codigosYcantidades.join('\n');
+                const totalCodigos = codigosYcantidades.length;
+                const card = document.createElement('div');
+                card.classList.add('card', 'p-3', 'shadow-sm');
+                card.style.width = '120mm';
+                card.style.height = '60mm';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'row';
+                card.style.justifyContent = 'space-between';
+                card.style.alignItems = 'flex-start';
+                card.style.textAlign = 'left';
+                card.style.position = 'relative';
+                let cedisNombre = cedis;
+                if (cedis === '4188') {
+                    cedisNombre = 'MÉRIDA 4188';
+                } else if (cedis === '4924') {
+                    cedisNombre = 'MEXICALI 4924';
+                } else if (cedis === '7490') {
+                    cedisNombre = 'MONTERREY 7490';
+                } else if (cedis === '4640') {
+                    cedisNombre = 'CHIHUAHUA 4640';
+                } else if (cedis === '7468') {
+                    cedisNombre = 'VILLAHERMOSA 7468';
+                } else if (cedis === '7493') {
+                    cedisNombre = 'GUADALAJARA 7493';
+                } else if (cedis === '7487') {
+                    cedisNombre = 'CULIACAN 7487';
+                } else if (cedis === '7471') {
+                    cedisNombre = 'CHALCO 7471';
+                } else if (cedis === '7464') {
+                    cedisNombre = 'CUAUTITLAN 7464';
+                }
                 card.innerHTML = `
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
                         <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
@@ -1031,10 +1457,7 @@
                         </div>
                     </div>
                 `;
-
                 generalContainer.appendChild(card);
-
-                // Generar código de barras para el número de tienda
                 setTimeout(() => {
                     try {
                         JsBarcode(`#modal-barcode-${idx}`, tienda, {
@@ -1046,8 +1469,6 @@
                         });
                     } catch (e) {}
                 }, 0);
-
-                // Generar QR con los códigos y cantidades agrupados
                 setTimeout(() => {
                     const qrDiv = document.getElementById(`modal-qr-${idx}`);
                     if (qrDiv) {
@@ -1061,30 +1482,15 @@
                     }
                 }, 0);
             });
-
             modalLabelContainer.appendChild(generalContainer);
-
-            // Mostrar el modal de Bootstrap
             const printModal = new bootstrap.Modal(document.getElementById('printModal'));
             printModal.show();
         }
 
+        // Función para imprimir desde la previsualización del modal
         function printModalLabels() {
             const printContents = document.getElementById('modal-label-container').innerHTML;
             const originalContents = document.body.innerHTML;
-
-
-
-
-
-
-
-
-
-
-
-            // Asegura que cada tarjeta esté en una hoja separada y que se impriman todas las tarjetas
-            // Elimina restricciones de tamaño de página y fuerza un salto de página después de cada tarjeta
             const printStyle = `
                 <style>
                     @media print {
@@ -1119,83 +1525,10 @@
                     }
                 </style>
             `;
-
             document.body.innerHTML = printStyle + printContents;
             window.print();
             document.body.innerHTML = originalContents;
             window.location.reload();
-        }
-
-
-
-
-
-
-
-
-
-
-        
-
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `notification-popup alert alert-${type}`;
-
-            // Crear el contenedor del ícono y el mensaje
-            const icon = document.createElement('i');
-            icon.style.marginRight = '15px';
-            icon.style.fontSize = '1.5rem'; // Aumentar el tamaño del ícono
-
-            // Asignar íconos y colores según el tipo
-            if (type === 'success') {
-                icon.className = 'fas fa-check-circle';
-                icon.style.color = '#ffffff'; // Blanco para contraste
-                notification.style.background = 'rgba(76, 175, 80, 0.8)'; // Verde translúcido
-            } else if (type === 'error') {
-                icon.className = 'fas fa-times-circle';
-                icon.style.color = '#ffffff'; // Blanco para contraste
-                notification.style.background = 'rgba(244, 67, 54, 0.8)'; // Rojo translúcido
-            } else if (type === 'info') {
-                icon.className = 'fas fa-info-circle';
-                icon.style.color = '#ffffff'; // Blanco para contraste
-                notification.style.background = 'rgba(33, 150, 243, 0.8)'; // Azul translúcido
-            } else if (type === 'warning') {
-                icon.className = 'fas fa-exclamation-circle';
-                icon.style.color = '#000000'; // Negro para contraste
-                notification.style.background = 'rgba(255, 193, 7, 0.8)'; // Amarillo translúcido
-                notification.style.color = '#212529'; // Texto oscuro para contraste
-            }
-
-            notification.style.position = 'fixed';
-            notification.style.bottom = '-100px'; // Inicia fuera de la pantalla
-            notification.style.right = '20px';
-            notification.style.zIndex = '2000';
-            notification.style.minWidth = '350px';
-            notification.style.padding = '20px';
-            notification.style.borderRadius = '15px';
-            notification.style.fontWeight = 'bold';
-            notification.style.color = '#fff';
-            notification.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.4)';
-            notification.style.transition = 'bottom 0.6s ease, opacity 0.4s ease';
-            notification.style.backdropFilter = 'blur(10px)'; // Fondo translúcido
-
-            // Agregar ícono y mensaje al contenedor
-            notification.appendChild(icon);
-            notification.appendChild(document.createTextNode(message));
-
-            document.body.appendChild(notification);
-
-            // Deslizar hacia arriba para mostrar
-            setTimeout(() => {
-                notification.style.bottom = '30px';
-            }, 100);
-
-            // Ocultar después de 4 segundos
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.bottom = '-100px'; // Deslizar hacia abajo para ocultar
-                setTimeout(() => notification.remove(), 600);
-            }, 4000);
         }
     </script>
 </body>
