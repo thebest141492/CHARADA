@@ -1076,7 +1076,7 @@
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const cedisCell = row.children[2];
+                    const cedisCell = row.children[7];
                     if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
                 });
             });
@@ -1117,6 +1117,12 @@
             document.getElementById('clear-cedis-filter-moda').style.display = 'none';
         }
 
+
+
+
+
+
+
         function printContainerModa() {
             const groups = document.querySelectorAll('#data-table-container-moda .group-container');
             const modalLabelContainer = document.getElementById('modal-label-container');
@@ -1125,11 +1131,87 @@
             generalContainer.style.display = 'block';
             groups.forEach((group, idx) => {
                 const titleElement = group.querySelector('div');
-                const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];
-                const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];
+                /*const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];*/
+                /*const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];*/
                 const oc = titleElement.querySelector('div:nth-child(3)').textContent.split(': ')[1];
                 const table = group.querySelector('table');
                 const rows = table.querySelectorAll('tbody tr');
+
+
+                // Extraer departamento 13 (índice 12) de la primera fila
+                let departamento = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[12];
+                if (col13) departamento = col13.textContent.trim();
+                }
+
+                 // Extraer modelo 3 (índice 2) de la primera fila
+                 let modelo = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[2];
+                if (col13) modelo = col13.textContent.trim();
+                }
+
+                // Extraer descripcion 12 (índice 11) de la primera fila
+                let descripcion = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[11];
+                if (col13) descripcion = col13.textContent.trim();
+                }
+
+                 // Extraer descripcion 4 (índice 3) de la primera fila
+                 let color = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[3];
+                if (col13) color = col13.textContent.trim();
+                }
+
+                // Extraer descripcion 9 (índice 8) de la primera fila
+                let cedis2 = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[8];
+                if (col13) cedis2 = col13.textContent.trim();
+                }
+
+                
+                // Extraer tienda 2 (índice 1) de la primera fila
+                let tienda2 = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[1];
+                if (col13) tienda2 = col13.textContent.trim();
+                }
+
+                 // Extraer tallas 5 (índice 4) de la primera fila
+                 let tallas = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[4];
+                if (col13) tallas = col13.textContent.trim();
+                }
+
+                 // Extraer distribucion 7 (índice 6) de la primera fila
+                 let pzas = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[6];
+                if (col13) pzas = col13.textContent.trim();
+                }
+
+
+                 // Extraer razon social 14 (índice 13) de la primera fila
+                 let razon = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[13];
+                if (col13) razon = col13.textContent.trim();
+                }
+
+                  // Extraer total de pzas 8 (índice 7) de la primera fila
+                  let totalpiezas = '';
+                if (rows.length > 0) {
+                 const col13 = rows[0].children[7];
+                if (col13) totalpiezas = col13.textContent.trim();
+                }
+
+
+
                 let codigosYcantidades = [];
                 let totalPiezas = 0;
                 rows.forEach(row => {
@@ -1144,69 +1226,83 @@
                 const totalCodigos = codigosYcantidades.length;
                 const card = document.createElement('div');
                 card.classList.add('card', 'p-3', 'shadow-sm');
-                card.style.width = '120mm';
-                card.style.height = '60mm';
+                card.style.width = '152mm';
+                card.style.height = '102mm';
                 card.style.display = 'flex';
                 card.style.flexDirection = 'row';
                 card.style.justifyContent = 'space-between';
                 card.style.alignItems = 'flex-start';
                 card.style.textAlign = 'left';
                 card.style.position = 'relative';
-                let cedisNombre = cedis;
-                if (cedis === '4188') {
+                let cedisNombre = cedis2;
+                if (cedis2 === '4188') {
                     cedisNombre = 'MÉRIDA 4188';
-                } else if (cedis === '4924') {
+                } else if (cedis2 === '4924') {
                     cedisNombre = 'MEXICALI 4924';
-                } else if (cedis === '7490') {
+                } else if (cedis2 === '7490') {
                     cedisNombre = 'MONTERREY 7490';
-                } else if (cedis === '4640') {
+                } else if (cedis2 === '4640') {
                     cedisNombre = 'CHIHUAHUA 4640';
-                } else if (cedis === '7468') {
+                } else if (cedis2 === '7468') {
                     cedisNombre = 'VILLAHERMOSA 7468';
-                } else if (cedis === '7493') {
+                } else if (cedis2 === '7493') {
                     cedisNombre = 'GUADALAJARA 7493';
-                } else if (cedis === '7487') {
+                } else if (cedis2=== '7487') {
                     cedisNombre = 'CULIACAN 7487';
-                } else if (cedis === '7471') {
+                } else if (cedis2 === '7471') {
                     cedisNombre = 'CHALCO 7471';
-                } else if (cedis === '7464') {
+                } else if (cedis2 === '7464') {
                     cedisNombre = 'CUAUTITLAN 7464';
                 }
                 card.innerHTML = `
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
-                        <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
-                        <div style="margin-top: 5px; font-size: 12px;">Proveedor: 627375</div>
-                        <div style="margin-top: 5px; font-size: 12px;">OC: <strong>${oc}</strong></div>
-                        <div style="margin-top: 5px; font-size: 12px;">Cedis: <strong>${cedisNombre}</strong></div>
-                        <div style="margin-top: 5px; font-size: 12px; text-align: center;">
+                       
+                        <div style="font-size: 14px; font-weight: bold;"><strong>${razon}</strong></div>
+                     
+                        <div style="margin-top: 5px; font-size: 14px;">OC: <strong>${oc}</strong></div>
+                        <div style="margin-top: 5px; font-size: 14px;">Departamento: <strong>${departamento}</strong></div>
+                        <div style="margin-top: 5px; font-size: 14px;">Modelo: <strong>${modelo}</strong></div>
+                        <div style="margin-top: 5px; font-size: 14px;">Descripción: <strong>${descripcion}</strong></div>
+                        <div style="margin-top: 5px; font-size: 14px;">Color: <strong>${color}</strong></div>
+
+                        
+                        <div style="margin-top: 5px; font-size: 14px;">Cedis: <strong>${cedisNombre}</strong></div>
+                         <div style="font-size: 14px; font-weight: bold;">UPC Código Padre</div>
+
+                        <div style="margin-top: 5px; font-size: 14px; text-align: center;">
                         <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
                         <br>
-                        <strong>${tienda}</strong>
+                       
+                        <strong>${tienda2}</strong>
+                       
+                        <div style="margin-top: 5px; font-size: 14px;text-align: left;">Tallas: <strong>${tallas}</strong></div> 
+                         <div style="margin-top: 5px; font-size: 14px;text-align: left;">Piezas: <strong>${pzas}</strong></div>
+
+                        <div style="margin-top: 5px; font-size: 14px;text-align: left;">Total de piezas: <strong>${totalpiezas}</strong></div>
+
+
                         </div>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-width: 50px;">
-                        <div id="modal-qr-moda-${idx}" style="margin-bottom: 4px;"></div>
-                        <div style="
-                            margin-top: 1px;
-                            width: max-content;
-                            text-align: center;
-                            font-size: 0.9rem;
-                            font-weight: bold;
-                            letter-spacing: 2px;
-                            background: rgba(240,240,240,0.7);
-                            border-radius: 6px;
-                            padding: 2px 5px 2px 8px;
-                        ">
-                            codigos: ${totalCodigos} / piezas: ${totalPiezas}
+
+                       
+                        
+
+
+
+
+                        
+                      
+                           
                         </div>
                     </div>
                 `;
                 generalContainer.appendChild(card);
                 setTimeout(() => {
                     try {
-                        JsBarcode(`#modal-barcode-moda-${idx}`, tienda, {
+                        JsBarcode(`#modal-barcode-moda-${idx}`, tienda2, {
                             format: "CODE128",
-                            width: 2,
+                            width: 1.5,
                             height: 30,
                             displayValue: false,
                             margin: 0
@@ -1214,16 +1310,7 @@
                     } catch (e) {}
                 }, 0);
                 setTimeout(() => {
-                    const qrDiv = document.getElementById(`modal-qr-moda-${idx}`);
-                    if (qrDiv) {
-                        qrDiv.innerHTML = "";
-                        new QRCode(qrDiv, {
-                            text: qrText,
-                            width: 151,
-                            height: 151,
-                            correctLevel: QRCode.CorrectLevel.H
-                        });
-                    }
+                    
                 }, 0);
             });
             modalLabelContainer.appendChild(generalContainer);
