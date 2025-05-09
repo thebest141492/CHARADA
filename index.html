@@ -415,6 +415,7 @@
             <main class="main-content">
                 <!-- Generador de QR Resurtidos -->
                 <section id="qr-generator" class="container" style="display: block;">
+                    
                     <div class="card p-5 mx-auto shadow-lg border-0" style="width: 100%; max-width: 1000px; border-radius: 20px; background: #ffffff;">
                         <h2 class="text-center mb-4" style="font-weight: 600; color: #2c3e50;">Subir Archivo Excel</h2>
                         <div class="d-flex flex-column align-items-center justify-content-center" 
@@ -422,14 +423,17 @@
                             id="drop-area" 
                             aria-labelledby="drop-area-label" 
                             role="region">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#3498db" class="mb-3" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5-.4h5.6l.9-.9a.5.5 0 0 1 .7 0l.9.9h5.6a.5.5 0 0 1 0 1H9.1l-.9.9a.5.5 0 0 1-.7 0l-.9-.9H1a.5.5 0 0 1-.5-.5z"/>
-                                <path d="M1 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V13z"/>
-                            </svg>
+                             <!-- Reemplaza el ícono SVG por una imagen PNG llamativa -->
+           <!-- Reemplazo del ícono SVG por un GIF animado -->
+<img src="https://lidianet.com/ldnt/wp-content/uploads/2020/03/FileUpLoad_lidianet.gif" 
+     alt="Animación subir archivo" 
+     style="max-width: 230px; margin-bottom: 10px; border-radius: 10px;">
+
+
                             <label for="excel-file" class="form-label fs-5 text-center" id="drop-area-label" style="color: #2c3e50;">
                                 Arrastra y suelta un archivo Excel aquí o haz clic para seleccionarlo
                             </label>
-                            <input type="file" id="excel-file" class="form-control w-50 mt-3" accept=".xlsx, .xls" onchange="handleExcelUpload()" 
+                            <input type="file" id="excel-file" class="form-control w-150 mt-3" accept=".xlsx, .xls" onchange="handleExcelUpload()" 
                                 style="max-width: 400px; cursor: pointer;">
                             <small class="form-text text-muted mt-2">Formatos permitidos: .xlsx, .xls</small>
                         </div>
@@ -1518,7 +1522,9 @@
                 card.style.alignItems = 'flex-start';
                 card.style.textAlign = 'left';
                 card.style.position = 'relative';
-                
+            
+               
+
 
                 let cedisNombre = cedis;
                 if (cedis === '4188') {
