@@ -538,7 +538,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="modal-label-container" 
-                        style="width: 80mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; border: 1px solid #ccc; padding: 10px;">
+                        style="width: 90mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; border: 1px solid #ccc; padding: 10px;">
                     </div>
                 </div>
             </div>
@@ -1509,15 +1509,17 @@
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
                 const card = document.createElement('div');
-                card.classList.add('card', 'p-3', 'shadow-sm');
-                card.style.width = '120mm';
-                card.style.height = '60mm';
+                
+                card.classList.add('p-3', 'shadow-sm');
+                
                 card.style.display = 'flex';
-                card.style.flexDirection = 'row';
+                //card.style.flexDirection = 'row';
                 card.style.justifyContent = 'space-between';
                 card.style.alignItems = 'flex-start';
                 card.style.textAlign = 'left';
                 card.style.position = 'relative';
+                
+
                 let cedisNombre = cedis;
                 if (cedis === '4188') {
                     cedisNombre = 'MÉRIDA 4188';
@@ -1541,7 +1543,7 @@
                 card.innerHTML = `
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
                         <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
-                        <div style="margin-top: 5px; font-size: 12px;">Proveedor: 627375</div>
+                        <div style="margin-top: 6px; font-size: 12px;">Proveedor: 627375</div>
                         <div style="margin-top: 5px; font-size: 12px;">OC: <strong>${oc}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px;">Cedis: <strong>${cedisNombre}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; text-align: center;">
@@ -1550,22 +1552,23 @@
                         <strong>${tienda}</strong>
                         </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-width: 50px;">
-                        <div id="modal-qr-${idx}" style="margin-bottom: 4px;"></div>
-                        <div style="
-                            margin-top: 1px;
-                            width: max-content;
-                            text-align: center;
-                            font-size: 0.9rem;
-                            font-weight: bold;
-                            letter-spacing: 2px;
-                            background: rgba(240,240,240,0.7);
-                            border-radius: 6px;
-                            padding: 2px 5px 2px 8px;
-                        ">
-                            codigos: ${totalCodigos} / piezas: ${totalPiezas}
-                        </div>
-                    </div>
+                    <div style="width: 151px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;">
+    <div id="modal-qr-${idx}" style="margin-bottom: 4px;"></div>
+    <div style="
+        margin-top: 1px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.6rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        //background: rgba(240,240,240,0.7);
+        //border-radius: 6px;
+        padding: 2px 5px;
+    ">
+        Códigos: ${totalCodigos} / Piezas: ${totalPiezas}
+    </div>
+</div>
+
                 `;
                 generalContainer.appendChild(card);
                 setTimeout(() => {

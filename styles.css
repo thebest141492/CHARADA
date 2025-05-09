@@ -322,6 +322,29 @@ body {
 
 
 
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  #modal-label-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  
+}
 
 
 
