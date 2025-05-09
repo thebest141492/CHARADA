@@ -1117,11 +1117,122 @@
             document.getElementById('clear-cedis-filter-moda').style.display = 'none';
         }
 
+        function showUniqueStores() {
+            // Si hay un cedis seleccionado, solo mostrar tiendas de ese cedis
+            const selectedCedis = document.getElementById('cedis-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+            const uniqueStores = new Set();
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cedisCell = row.children[2];
+                    const storeCell = row.children[3];
+                    if (storeCell && (!selectedCedis || (cedisCell && cedisCell.textContent.trim() === selectedCedis))) {
+                        uniqueStores.add(storeCell.textContent.trim());
+                    }
+                });
+            });
+            const storeSelect = document.getElementById('store-select');
+            storeSelect.innerHTML = '<option value="">Selecciona una tienda</option>';
+            uniqueStores.forEach(store => {
+                const option = document.createElement('option');
+                option.value = store;
+                option.textContent = store;
+                storeSelect.appendChild(option);
+            });
+            storeSelect.style.display = 'block';
+            document.getElementById('clear-store-filter').style.display = 'block';
+        }
 
+        function filterByStore() {
+            const selectedStore = document.getElementById('store-select').value;
+            const selectedCedis = document.getElementById('cedis-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const storeCell = row.children[3];
+                    const cedisCell = row.children[2];
+                    let isVisible = true;
+                    if (selectedCedis) {
+                        isVisible = cedisCell && cedisCell.textContent.trim() === selectedCedis;
+                    }
+                    if (selectedStore) {
+                        isVisible = isVisible && storeCell && storeCell.textContent.trim() === selectedStore;
+                    }
+                    row.style.display = isVisible ? '' : 'none';
+                    if (isVisible) hasVisibleRows = true;
+                });
+                group.style.display = hasVisibleRows ? '' : 'none';
+            });
+        }
 
+        function clearStoreFilter() {
+            document.getElementById('store-select').value = '';
+            filterByStore();
+            document.getElementById('clear-store-filter').style.display = 'none';
+        }
 
+        function showUniqueCedis() {
+            // Mostrar todos los cedis disponibles
+            const tables = document.querySelectorAll('#data-table-container table');
+            const uniqueCedis = new Set();
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cedisCell = row.children[2];
+                    if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
+                });
+            });
+            const cedisSelect = document.getElementById('cedis-select');
+            cedisSelect.innerHTML = '<option value="">Selecciona un cedis</option>';
+            uniqueCedis.forEach(cedis => {
+                const option = document.createElement('option');
+                option.value = cedis;
+                option.textContent = cedis;
+                cedisSelect.appendChild(option);
+            });
+            cedisSelect.style.display = 'block';
+            document.getElementById('clear-cedis-filter').style.display = 'block';
+        }
 
+        function filterByCedis() {
+            const selectedCedis = document.getElementById('cedis-select').value;
+            // Al cambiar cedis, actualizar tiendas disponibles
+            showUniqueStores();
+            // Si hay una tienda seleccionada, mantenerla
+            const selectedStore = document.getElementById('store-select').value;
+            const tables = document.querySelectorAll('#data-table-container .group-container');
+            tables.forEach(group => {
+                const table = group.querySelector('table');
+                let hasVisibleRows = false;
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cedisCell = row.children[2];
+                    const storeCell = row.children[3];
+                    let isVisible = true;
+                    if (selectedCedis) {
+                        isVisible = cedisCell && cedisCell.textContent.trim() === selectedCedis;
+                    }
+                    if (selectedStore) {
+                        isVisible = isVisible && storeCell && storeCell.textContent.trim() === selectedStore;
+                    }
+                    row.style.display = isVisible ? '' : 'none';
+                    if (isVisible) hasVisibleRows = true;
+                });
+                group.style.display = hasVisibleRows ? '' : 'none';
+            });
+        }
 
+        function clearCedisFilter() {
+            document.getElementById('cedis-select').value = '';
+            showUniqueStores();
+            filterByCedis();
+            document.getElementById('clear-cedis-filter').style.display = 'none';
+        }
 
         function printContainerModa() {
             const groups = document.querySelectorAll('#data-table-container-moda .group-container');
@@ -1366,100 +1477,6 @@
             document.getElementById('clear-model-filter').style.display = 'none';
         }
 
-        function showUniqueStores() {
-            const tables = document.querySelectorAll('#data-table-container table');
-            const uniqueStores = new Set();
-            tables.forEach(table => {
-                const rows = table.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const storeCell = row.children[3];
-                    if (storeCell) uniqueStores.add(storeCell.textContent.trim());
-                });
-            });
-            const storeSelect = document.getElementById('store-select');
-            storeSelect.innerHTML = '<option value="">Selecciona una tienda</option>';
-            uniqueStores.forEach(store => {
-                const option = document.createElement('option');
-                option.value = store;
-                option.textContent = store;
-                storeSelect.appendChild(option);
-            });
-            storeSelect.style.display = 'block';
-            document.getElementById('clear-store-filter').style.display = 'block';
-        }
-
-        function filterByStore() {
-            const selectedStore = document.getElementById('store-select').value;
-            const tables = document.querySelectorAll('#data-table-container .group-container');
-            tables.forEach(group => {
-                const table = group.querySelector('table');
-                let hasVisibleRows = false;
-                const rows = table.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const storeCell = row.children[3];
-                    if (storeCell) {
-                        const isVisible = selectedStore ? storeCell.textContent.trim() === selectedStore : true;
-                        row.style.display = isVisible ? '' : 'none';
-                        if (isVisible) hasVisibleRows = true;
-                    }
-                });
-                group.style.display = hasVisibleRows ? '' : 'none';
-            });
-        }
-
-        function clearStoreFilter() {
-            document.getElementById('store-select').value = '';
-            filterByStore();
-            document.getElementById('clear-store-filter').style.display = 'none';
-        }
-
-        function showUniqueCedis() {
-            const tables = document.querySelectorAll('#data-table-container table');
-            const uniqueCedis = new Set();
-            tables.forEach(table => {
-                const rows = table.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const cedisCell = row.children[2];
-                    if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
-                });
-            });
-            const cedisSelect = document.getElementById('cedis-select');
-            cedisSelect.innerHTML = '<option value="">Selecciona un cedis</option>';
-            uniqueCedis.forEach(cedis => {
-                const option = document.createElement('option');
-                option.value = cedis;
-                option.textContent = cedis;
-                cedisSelect.appendChild(option);
-            });
-            cedisSelect.style.display = 'block';
-            document.getElementById('clear-cedis-filter').style.display = 'block';
-        }
-
-        function filterByCedis() {
-            const selectedCedis = document.getElementById('cedis-select').value;
-            const tables = document.querySelectorAll('#data-table-container .group-container');
-            tables.forEach(group => {
-                const table = group.querySelector('table');
-                let hasVisibleRows = false;
-                const rows = table.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const cedisCell = row.children[2];
-                    if (cedisCell) {
-                        const isVisible = selectedCedis ? cedisCell.textContent.trim() === selectedCedis : true;
-                        row.style.display = isVisible ? '' : 'none';
-                        if (isVisible) hasVisibleRows = true;
-                    }
-                });
-                group.style.display = hasVisibleRows ? '' : 'none';
-            });
-        }
-
-        function clearCedisFilter() {
-            document.getElementById('cedis-select').value = '';
-            filterByCedis();
-            document.getElementById('clear-cedis-filter').style.display = 'none';
-        }
-
         function printContainer() {
             const groups = document.querySelectorAll('#data-table-container .group-container');
             const modalLabelContainer = document.getElementById('modal-label-container');
@@ -1467,6 +1484,8 @@
             const generalContainer = document.createElement('div');
             generalContainer.style.display = 'block';
             groups.forEach((group, idx) => {
+                // Solo procesar grupos visibles
+                if (group.style.display === 'none') return;
                 const titleElement = group.querySelector('div');
                 const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];
                 const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];
@@ -1475,7 +1494,9 @@
                 const rows = table.querySelectorAll('tbody tr');
                 let codigosYcantidades = [];
                 let totalPiezas = 0;
+                // Solo incluir filas visibles
                 rows.forEach(row => {
+                    if (row.style.display === 'none') return;
                     const codigo = row.children[4]?.textContent.trim();
                     const cantidad = row.children[9]?.textContent.trim();
                     if (codigo && cantidad) {
@@ -1483,6 +1504,8 @@
                         totalPiezas += parseInt(cantidad) || 0;
                     }
                 });
+                // Si no hay filas visibles, no mostrar el grupo
+                if (codigosYcantidades.length === 0) return;
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
                 const card = document.createElement('div');
