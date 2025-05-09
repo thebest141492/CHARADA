@@ -1484,7 +1484,7 @@
             const generalContainer = document.createElement('div');
             generalContainer.style.display = 'block';
             groups.forEach((group, idx) => {
-                // Solo procesar grupos visibles
+                // Solo procesar grupos visibless
                 if (group.style.display === 'none') return;
                 const titleElement = group.querySelector('div');
                 const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];
