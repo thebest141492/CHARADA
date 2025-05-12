@@ -573,17 +573,77 @@
             const table = row.closest('table');
             const titleElement = table.previousElementSibling;
             const piezas = parseInt(row.children[9]?.textContent || 0);
-            const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
-            if (totalMatch) {
-                const totalActual = parseInt(totalMatch[1]);
-                const nuevoTotal = totalActual - piezas;
-                titleElement.innerHTML = titleElement.innerHTML.replace(
-                    /<strong>Total de piezas:<\/strong> \d+/,
-                    `<strong>Total de piezas:</strong> ${nuevoTotal}`
-                );
-            }
             row.remove();
+            // Recalcular total de piezas
+            updateTotalPiezas(table, titleElement);
             showNotification('Se eliminó correctamente.', 'info');
+        }
+
+        function deleteRowModa(button) {
+            const row = button.closest('tr');
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling;
+            const piezas = parseInt(row.children[9]?.textContent || 0);
+            row.remove();
+            // Recalcular total de piezas
+            updateTotalPiezas(table, titleElement);
+            showNotification('Se eliminó correctamente.', 'info');
+        }
+
+        function enableEdit(button) {
+            const row = button.closest('tr');
+            const editableCell = row.children[9];
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling;
+            if (editableCell) {
+                const originalValue = parseInt(editableCell.textContent) || 0;
+                editableCell.setAttribute('contenteditable', 'true');
+                editableCell.focus();
+                editableCell.style.backgroundColor = '#fff3cd';
+                editableCell.addEventListener('blur', function onBlur() {
+                    editableCell.removeEventListener('blur', onBlur);
+                    editableCell.setAttribute('contenteditable', 'false');
+                    editableCell.style.backgroundColor = '';
+                    // Recalcular total de piezas
+                    updateTotalPiezas(table, titleElement);
+                });
+            }
+        }
+
+        function enableEditModa(button) {
+            const row = button.closest('tr');
+            const editableCell = row.children[9];
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling;
+            if (editableCell) {
+                const originalValue = parseInt(editableCell.textContent) || 0;
+                editableCell.setAttribute('contenteditable', 'true');
+                editableCell.focus();
+                editableCell.style.backgroundColor = '#fff3cd';
+                editableCell.addEventListener('blur', function onBlur() {
+                    editableCell.removeEventListener('blur', onBlur);
+                    editableCell.setAttribute('contenteditable', 'false');
+                    editableCell.style.backgroundColor = '';
+                    // Recalcular total de piezas
+                    updateTotalPiezas(table, titleElement);
+                });
+            }
+        }
+
+        // Función para recalcular el total de piezas de la tabla y actualizar el título
+        function updateTotalPiezas(table, titleElement) {
+            let total = 0;
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                // Solo contar filas visibles (por si hay filtros)
+                if (row.style.display === 'none') return;
+                const val = parseInt(row.children[9]?.textContent || 0);
+                if (!isNaN(val)) total += val;
+            });
+            titleElement.innerHTML = titleElement.innerHTML.replace(
+                /<strong>Total de piezas:<\/strong> \d+/,
+                `<strong>Total de piezas:</strong> ${total}`
+            );
         }
 
         function handleExcelUpload() {
@@ -608,9 +668,12 @@
                     }
                     groupedData[key].push(row);
                 });
-                Object.keys(groupedData).forEach(key => {
+                Object.keys(groupedData).forEach((key, groupIdx) => {
                     const groupContainer = document.createElement('div');
                     groupContainer.classList.add('group-container', 'mb-4');
+                    groupContainer.setAttribute('data-group-key', key);
+                    groupContainer.setAttribute('data-caja', '1');
+                    groupContainer.setAttribute('data-total-cajas', '1');
                     const [cedis, tienda] = key.split(' - ');
                     const pedido = groupedData[key][0][1];
                     const totalPiezas = groupedData[key].reduce((sum, row) => sum + (parseInt(row[9]) || 0), 0);
@@ -621,8 +684,19 @@
                         <div><strong>Cedis:</strong> ${cedis}</div>
                         <div><strong>Tienda:</strong> ${tienda}</div>
                         <div><strong>Pedido:</strong> ${pedido}</div>
-                        <div><strong>Total de piezas:</strong> ${totalPiezas}</div>
+                        <div>
+                            <strong>Total de piezas:</strong> ${totalPiezas}
+                            <button class="btn btn-success btn-sm ms-2" onclick="duplicateGroup(this)">Duplicar cajas</button>
+                            <button class="btn btn-danger btn-sm ms-1" style="display:none;" onclick="removeGroupDuplicate(this)">Eliminar duplicado</button>
+                        </div>
                     `;
+                    const cajaDiv = document.createElement('div');
+                    cajaDiv.className = 'caja-info';
+                    cajaDiv.style.fontWeight = 'bold';
+                    cajaDiv.style.fontSize = '1rem';
+                    cajaDiv.style.marginTop = '5px';
+                    cajaDiv.innerHTML = `Caja: 1 de 1`;
+                    title.insertBefore(cajaDiv, title.children[1]);
                     groupContainer.appendChild(title);
                     const table = document.createElement('table');
                     table.classList.add('table', 'table-striped');
@@ -659,11 +733,15 @@
                             <button class="btn btn-danger btn-sm" onclick="deleteRow(this)">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
+                            <button class="btn btn-info btn-sm" onclick="duplicateRow(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         `;
                         tr.appendChild(actionTd);
                         tbody.appendChild(tr);
                     });
                     table.appendChild(tbody);
+                    groupContainer.appendChild(table);
                     container.appendChild(groupContainer);
                 });
             };
@@ -743,87 +821,19 @@
                             <button class="btn btn-danger btn-sm" onclick="deleteRowModa(this)">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
+                            <button class="btn btn-info btn-sm" onclick="duplicateRowModa(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         `;
                         tr.appendChild(actionTd);
                         tbody.appendChild(tr);
                     });
                     table.appendChild(tbody);
+                    groupContainer.appendChild(table);
                     container.appendChild(groupContainer);
                 });
             };
             reader.readAsArrayBuffer(file);
-        }
-
-        function enableEdit(button) {
-            const row = button.closest('tr');
-            const editableCell = row.children[9];
-            const table = row.closest('table');
-            const titleElement = table.previousElementSibling;
-            if (editableCell) {
-                const originalValue = parseInt(editableCell.textContent) || 0;
-                editableCell.setAttribute('contenteditable', 'true');
-                editableCell.focus();
-                editableCell.style.backgroundColor = '#fff3cd';
-                editableCell.addEventListener('blur', () => {
-                    editableCell.setAttribute('contenteditable', 'false');
-                    editableCell.style.backgroundColor = '';
-                    const newValue = parseInt(editableCell.textContent) || 0;
-                    const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
-                    if (totalMatch) {
-                        const totalActual = parseInt(totalMatch[1]);
-                        const nuevoTotal = totalActual - originalValue + newValue;
-                        titleElement.innerHTML = titleElement.innerHTML.replace(
-                            /<strong>Total de piezas:<\/strong> \d+/,
-                            `<strong>Total de piezas:</strong> ${nuevoTotal}`
-                        );
-                    }
-                });
-            }
-        }
-
-        function enableEditModa(button) {
-            const row = button.closest('tr');
-            const editableCell = row.children[9];
-            const table = row.closest('table');
-            const titleElement = table.previousElementSibling;
-            if (editableCell) {
-                const originalValue = parseInt(editableCell.textContent) || 0;
-                editableCell.setAttribute('contenteditable', 'true');
-                editableCell.focus();
-                editableCell.style.backgroundColor = '#fff3cd';
-                editableCell.addEventListener('blur', () => {
-                    editableCell.setAttribute('contenteditable', 'false');
-                    editableCell.style.backgroundColor = '';
-                    const newValue = parseInt(editableCell.textContent) || 0;
-                    const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
-                    if (totalMatch) {
-                        const totalActual = parseInt(totalMatch[1]);
-                        const nuevoTotal = totalActual - originalValue + newValue;
-                        titleElement.innerHTML = titleElement.innerHTML.replace(
-                            /<strong>Total de piezas:<\/strong> \d+/,
-                            `<strong>Total de piezas:</strong> ${nuevoTotal}`
-                        );
-                    }
-                });
-            }
-        }
-
-        function deleteRowModa(button) {
-            const row = button.closest('tr');
-            const table = row.closest('table');
-            const titleElement = table.previousElementSibling;
-            const piezas = parseInt(row.children[9]?.textContent || 0);
-            const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
-            if (totalMatch) {
-                const totalActual = parseInt(totalMatch[1]);
-                const nuevoTotal = totalActual - piezas;
-                titleElement.innerHTML = titleElement.innerHTML.replace(
-                    /<strong>Total de piezas:<\/strong> \d+/,
-                    `<strong>Total de piezas:</strong> ${nuevoTotal}`
-                );
-            }
-            row.remove();
-            showNotification('Se eliminó correctamente.', 'info');
         }
 
         function toggleMenu() {
@@ -1256,8 +1266,6 @@
             generalContainer.style.display = 'block';
             groups.forEach((group, idx) => {
                 const titleElement = group.querySelector('div');
-                /*const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];*/
-                /*const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];*/
                 const oc = titleElement.querySelector('div:nth-child(3)').textContent.split(': ')[1];
                 const table = group.querySelector('table');
                 const rows = table.querySelectorAll('tbody tr');
@@ -1498,17 +1506,25 @@
             const generalContainer = document.createElement('div');
             generalContainer.style.display = 'block';
             groups.forEach((group, idx) => {
-                // Solo procesar grupos visiblessss
                 if (group.style.display === 'none') return;
                 const titleElement = group.querySelector('div');
                 const cedis = titleElement.querySelector('div:nth-child(1)').textContent.split(': ')[1];
-                const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];
-                const oc = titleElement.querySelector('div:nth-child(3)').textContent.split(': ')[1];
+                // Obtener el valor de la columna 4 (índice 3) de la primera fila visible
                 const table = group.querySelector('table');
                 const rows = table.querySelectorAll('tbody tr');
+                let codigoCol4 = '';
+                let oc = '';
+                for (let i = 0; i < rows.length; i++) {
+                    if (rows[i].style.display === 'none') continue;
+                    codigoCol4 = rows[i].children[3]?.textContent.trim() || '';
+                    oc = rows[i].children[1]?.textContent.trim() || '';
+                    break;
+                }
+                const tienda = titleElement.querySelector('div:nth-child(2)').textContent.split(': ')[1];
+                const cajaDiv = titleElement.querySelector('.caja-info');
+                let cajaTexto = cajaDiv ? cajaDiv.textContent : '';
                 let codigosYcantidades = [];
                 let totalPiezas = 0;
-                // Solo incluir filas visibles
                 rows.forEach(row => {
                     if (row.style.display === 'none') return;
                     const codigo = row.children[4]?.textContent.trim();
@@ -1518,24 +1534,9 @@
                         totalPiezas += parseInt(cantidad) || 0;
                     }
                 });
-                // Si no hay filas visibles, no mostrar el grupo
                 if (codigosYcantidades.length === 0) return;
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
-                const card = document.createElement('div');
-                
-                card.classList.add('p-3');
-                
-                card.style.display = 'flex';
-                //card.style.flexDirection = 'row';
-                card.style.justifyContent = 'space-between';
-                card.style.alignItems = 'flex-start';
-                card.style.textAlign = 'left';
-                card.style.position = 'relative';
-            
-               
-
-
                 let cedisNombre = cedis;
                 if (cedis === '4188') {
                     cedisNombre = 'MÉRIDA 4188';
@@ -1556,50 +1557,49 @@
                 } else if (cedis === '7464') {
                     cedisNombre = 'CUAUTITLAN 7464';
                 }
+                const card = document.createElement('div');
+                card.classList.add('p-3');
+                card.style.display = 'flex';
+                card.style.justifyContent = 'space-between';
+                card.style.alignItems = 'flex-start';
+                card.style.textAlign = 'left';
+                card.style.position = 'relative';
                 card.innerHTML = `
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
                         <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
                         <div style="margin-top: 6px; font-size: 12px;">Proveedor: 627375</div>
                         <div style="margin-top: 5px; font-size: 12px;">OC: <strong>${oc}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px;">Cedis: <strong>${cedisNombre}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; color: #333;"><strong>${cajaTexto}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; text-align: center;">
-                        <svg id="modal-barcode-${idx}" style="margin-top:1px;"></svg>
-                        <br>
-                        <strong>${tienda}</strong>
+                            <svg id="modal-barcode-${idx}" style="margin-top:1px;"></svg>
+                            <div style="font-size: 14px; font-weight: bold; margin-top:2px; text-align:center;">${codigoCol4}</div>
                         </div>
                     </div>
                     <div style="width: 151px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;">
-
-                        
-       <div class="qr-wrapper" style="
-    display: flex;
-    flex-direction: column;
-    align-items: center;  /* CENTRA hijos horizontalmente */
-    margin-bottom: 8px;    /* espacio opcional bajo todo el bloque */
-">
-  <!-- Contenedor del QR -->
-  <div id="modal-qr-${idx}" style=" /* ya aquí no hace falta text-align */
-    /* tamaño o margenes extra si necesitas */
-  "></div>
-
-  <!-- Texto justo abajo y centrado -->
-  <div style="
-    margin-top: 4px;       /* espacio entre QR y texto */
-    font-size: 0.6rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    padding: 2px 5px;
-    /* ¡OJO! sin width:100% */
-  ">
-    Códigos: ${totalCodigos} / Piezas: ${totalPiezas}
-  </div>
-</div>
-
+                        <div class="qr-wrapper" style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            margin-bottom: 8px;
+                        ">
+                            <div id="modal-qr-${idx}"></div>
+                            <div style="
+                                margin-top: 4px;
+                                font-size: 0.6rem;
+                                font-weight: bold;
+                                letter-spacing: 2px;
+                                padding: 2px 5px;
+                            ">
+                                Códigos:${totalCodigos}/Piezas:${totalPiezas}
+                            </div>
+                        </div>
+                    </div>
                 `;
                 generalContainer.appendChild(card);
                 setTimeout(() => {
                     try {
-                        JsBarcode(`#modal-barcode-${idx}`, tienda, {
+                        JsBarcode(`#modal-barcode-${idx}`, codigoCol4, {
                             format: "CODE128",
                             width: 1.5,
                             height: 42,
@@ -1626,7 +1626,6 @@
             printModal.show();
         }
 
-        // Función para imprimir desde la previsualización del modal
         function printModalLabels() {
             const printContents = document.getElementById('modal-label-container').innerHTML;
             const originalContents = document.body.innerHTML;
@@ -1668,6 +1667,119 @@
             window.print();
             document.body.innerHTML = originalContents;
             window.location.reload();
+        }
+
+        function duplicateRow(button) {
+            const row = button.closest('tr');
+            const clone = row.cloneNode(true);
+            const btns = clone.querySelectorAll('button');
+            if (btns.length === 3) {
+                btns[0].setAttribute('onclick', 'enableEdit(this)');
+                btns[1].setAttribute('onclick', 'deleteRow(this)');
+                btns[2].setAttribute('onclick', 'duplicateRow(this)');
+            }
+            row.parentNode.insertBefore(clone, row.nextSibling);
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling;
+            const piezas = parseInt(row.children[9]?.textContent || 0);
+            const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
+            if (totalMatch) {
+                const totalActual = parseInt(totalMatch[1]);
+                const nuevoTotal = totalActual + piezas;
+                titleElement.innerHTML = titleElement.innerHTML.replace(
+                    /<strong>Total de piezas:<\/strong> \d+/,
+                    `<strong>Total de piezas:</strong> ${nuevoTotal}`
+                );
+            }
+            showNotification('Fila duplicada correctamente.', 'success');
+        }
+        function duplicateRowModa(button) {
+            const row = button.closest('tr');
+            const clone = row.cloneNode(true);
+            const btns = clone.querySelectorAll('button');
+            if (btns.length === 3) {
+                btns[0].setAttribute('onclick', 'enableEditModa(this)');
+                btns[1].setAttribute('onclick', 'deleteRowModa(this)');
+                btns[2].setAttribute('onclick', 'duplicateRowModa(this)');
+            }
+            row.parentNode.insertBefore(clone, row.nextSibling);
+            const table = row.closest('table');
+            const titleElement = table.previousElementSibling;
+            const piezas = parseInt(row.children[9]?.textContent || 0);
+            const totalMatch = titleElement.innerHTML.match(/<strong>Total de piezas:<\/strong> (\d+)/);
+            if (totalMatch) {
+                const totalActual = parseInt(totalMatch[1]);
+                const nuevoTotal = totalActual + piezas;
+                titleElement.innerHTML = titleElement.innerHTML.replace(
+                    /<strong>Total de piezas:<\/strong> \d+/,
+                    `<strong>Total de piezas:</strong> ${nuevoTotal}`
+                );
+            }
+            showNotification('Fila duplicada correctamente.', 'success');
+        }
+
+        function duplicateGroup(btn) {
+            const titleDiv = btn.closest('.d-flex');
+            const groupContainer = titleDiv.parentNode;
+            const container = groupContainer.parentNode;
+            const clone = groupContainer.cloneNode(true);
+            const key = groupContainer.getAttribute('data-group-key');
+            const allGroups = Array.from(container.querySelectorAll(`[data-group-key="${key}"]`));
+            const totalCajas = allGroups.length + 1;
+            allGroups.forEach((g, idx) => {
+                g.setAttribute('data-caja', idx + 1);
+                g.setAttribute('data-total-cajas', totalCajas);
+                const cajaDiv = g.querySelector('.caja-info');
+                if (cajaDiv) cajaDiv.innerHTML = `Caja: ${idx + 1} de ${totalCajas}`;
+                const btns = g.querySelectorAll('button');
+                if (btns.length >= 2) {
+                    btns[1].style.display = (idx > 0) ? 'inline-block' : 'none';
+                }
+            });
+            clone.setAttribute('data-caja', totalCajas);
+            clone.setAttribute('data-total-cajas', totalCajas);
+            const cajaDivClone = clone.querySelector('.caja-info');
+            if (cajaDivClone) cajaDivClone.innerHTML = `Caja: ${totalCajas} de ${totalCajas}`;
+            const btnsClone = clone.querySelectorAll('button');
+            if (btnsClone.length >= 2) {
+                btnsClone[1].style.display = 'inline-block';
+            }
+            if (allGroups.length > 0) {
+                allGroups[allGroups.length - 1].after(clone);
+            } else {
+                container.appendChild(clone);
+            }
+            updateAllGroupTotals(container, key);
+        }
+
+        function removeGroupDuplicate(btn) {
+            const titleDiv = btn.closest('.d-flex');
+            const groupContainer = titleDiv.parentNode;
+            const container = groupContainer.parentNode;
+            const key = groupContainer.getAttribute('data-group-key');
+            groupContainer.remove();
+            const allGroups = Array.from(container.querySelectorAll(`[data-group-key="${key}"]`));
+            const totalCajas = allGroups.length;
+            allGroups.forEach((g, idx) => {
+                g.setAttribute('data-caja', idx + 1);
+                g.setAttribute('data-total-cajas', totalCajas);
+                const cajaDiv = g.querySelector('.caja-info');
+                if (cajaDiv) cajaDiv.innerHTML = `Caja: ${idx + 1} de ${totalCajas}`;
+                const btns = g.querySelectorAll('button');
+                if (btns.length >= 2) {
+                    btns[1].style.display = (idx > 0) ? 'inline-block' : 'none';
+                }
+            });
+            updateAllGroupTotals(container, key);
+        }
+
+        function updateAllGroupTotals(container, key) {
+            const allGroups = Array.from(container.querySelectorAll(`[data-group-key="${key}"]`));
+            allGroups.forEach(g => {
+                const table = g.querySelector('table');
+                const titleElement = g.querySelector('.d-flex');
+                updateTotalPiezas(table, titleElement);
+            });
         }
     </script>
 </body>
