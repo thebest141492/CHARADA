@@ -382,9 +382,18 @@
 </head>
 <body>
     <div class="page-container">
+
+
+
         <!-- Menú interactivo -->
         <nav id="menu-bar" class="menu-bar visible">
-            <div class="menu-logo">APP Charada</div>
+            <div class="menu-logo">
+        APP Charada
+        <img src="charada/LOGO.png" alt="Logo" style="height: 60px; margin-left: 20px;" />
+    </div>
+
+
+
             <ul id="menu-list" class="menu-list">
                 <li class="menu-item active" onclick="showQRGenerator()">
                     <i class="fas fa-qrcode"></i>
@@ -433,6 +442,8 @@
                             <label for="excel-file" class="form-label fs-5 text-center" id="drop-area-label" style="color: #2c3e50;">
                                 Arrastra y suelta un archivo Excel aquí o haz clic para seleccionarlo
                             </label>
+
+                            
                             <input type="file" id="excel-file" class="form-control w-150 mt-3" accept=".xlsx, .xls" onchange="handleExcelUpload()" 
                                 style="max-width: 400px; cursor: pointer;">
                             <small class="form-text text-muted mt-2">Formatos permitidos: .xlsx, .xls</small>
