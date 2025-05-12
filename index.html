@@ -15,7 +15,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-           background: linear-gradient(135deg, #6a11cb, #2575fc); /* Fondo único */
+           background: linear-gradient(135deg, #110258, #0863ff); /* Fondo único */
            background-size: 100% 100%; /* Ajusta exactamente al tamaño del viewport      */
     background-repeat: no-repeat; /* Asegura que no se repita */
     background-position: center center;
@@ -60,7 +60,7 @@
             left: 0;
             height: 100%;
             width: 250px;
-            background: linear-gradient(135deg, rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9)); /* Fondo combinado con el escritorio */
+            background: linear-gradient(135deg, rgba(16, 1, 68, 0.9), rgba(3, 96, 255, 0.9)); /* Fondo combinado con el escritorio */
             color: white;
             display: none; /* Ocultar el menú inicialmente */
             flex-direction: column;
@@ -387,11 +387,10 @@
 
         <!-- Menú interactivo -->
         <nav id="menu-bar" class="menu-bar visible">
-            <div class="menu-logo">
-        APP Charada
-        <img src="charada/LOGO.png" alt="Logo" style="height: 60px; margin-left: 20px;" />
+        <div class="menu-logo" style="display: flex; align-items: center;">
+        <span style="font-weight: bold; font-size: 29px;">APP CARDIG</span>
+        <img src="LOGO.png" alt="Logo" style="height: 60px; margin-left: 10px;" />
     </div>
-
 
 
             <ul id="menu-list" class="menu-list">
@@ -1570,20 +1569,30 @@
                         </div>
                     </div>
                     <div style="width: 151px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;">
-    <div id="modal-qr-${idx}" style="margin-bottom: 4px;"></div>
-    <div style="
-        margin-top: 1px;
-        width: 100%;
-        text-align: center;
-        font-size: 0.6rem;
-        font-weight: bold;
-        letter-spacing: 2px;
-        //background: rgba(240,240,240,0.7);
-        //border-radius: 6px;
-        padding: 2px 5px;
-    ">
-        Códigos: ${totalCodigos} / Piezas: ${totalPiezas}
-    </div>
+
+                        
+       <div class="qr-wrapper" style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* CENTRA hijos horizontalmente */
+    margin-bottom: 8px;    /* espacio opcional bajo todo el bloque */
+">
+  <!-- Contenedor del QR -->
+  <div id="modal-qr-${idx}" style=" /* ya aquí no hace falta text-align */
+    /* tamaño o margenes extra si necesitas */
+  "></div>
+
+  <!-- Texto justo abajo y centrado -->
+  <div style="
+    margin-top: 4px;       /* espacio entre QR y texto */
+    font-size: 0.6rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 2px 5px;
+    /* ¡OJO! sin width:100% */
+  ">
+    Códigos: ${totalCodigos} / Piezas: ${totalPiezas}
+  </div>
 </div>
 
                 `;
@@ -1592,8 +1601,8 @@
                     try {
                         JsBarcode(`#modal-barcode-${idx}`, tienda, {
                             format: "CODE128",
-                            width: 2,
-                            height: 30,
+                            width: 1.5,
+                            height: 42,
                             displayValue: false,
                             margin: 0
                         });
@@ -1605,8 +1614,8 @@
                         qrDiv.innerHTML = "";
                         new QRCode(qrDiv, {
                             text: qrText,
-                            width: 151,
-                            height: 151,
+                            width: 110,
+                            height: 110,
                             correctLevel: QRCode.CorrectLevel.H
                         });
                     }
