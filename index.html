@@ -71,7 +71,7 @@
             z-index: 1000;
             transition: transform 0.3s ease-in-out, background-color 0.5s, box-shadow 0.5s;
         }
-        .menu-bar.visible {
+       .menu-bar.visible {
             display: flex; /* Mostrar el menú después de iniciar sesión */
         }
         .menu-logo {
@@ -1387,7 +1387,7 @@
                 const totalCodigos = codigosYcantidades.length;
                 const modeloImgSrc = `imagenes_moda/${modelo}.jpg`;
                 const card = document.createElement('div');
-                card.classList.add('card', 'p-3', 'shadow-sm');
+                card.classList.add('card', 'p-1', 'shadow-sm');
                 card.style.width = '152mm';
                 card.style.height = '102mm';
                 card.style.display = 'flex';
@@ -1416,37 +1416,43 @@
                 } else if (cedis2 === '7464') {
                     cedisNombre = 'CUAUTITLAN 7464';
                 }
-                card.innerHTML = `
-                    <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
-                       
-                        <div style="font-size: 14px; font-weight: bold;"><strong>${razon}</strong></div>
-                     
-                        <div style="margin-top: 5px; font-size: 14px;">OC: <strong>${oc}</strong></div>
-                        <div style="margin-top: 5px; font-size: 14px;">Departamento: <strong>${departamento}</strong></div>
-                        <div style="margin-top: 5px; font-size: 14px;">Modelo: <strong>${modelo}</strong></div>
-                        <div style="margin-top: 5px; font-size: 14px;">Descripción: <strong>${descripcion}</strong></div>
-                        <div style="margin-top: 5px; font-size: 14px;">Color: <strong>${color}</strong></div>
+               card.innerHTML = `
+  <div style="display: flex; justify-content: space-between; width: 100%; padding: 0;">
+    <!-- Columna izquierda -->
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+      <div style="margin-top: 5px; font-size: 15px; font-weight: bold;"><strong>${razon}</strong></div>
 
-                        
-                        <div style="margin-top: 5px; font-size: 14px;">Cedis: <strong>${cedisNombre}</strong></div>
-                         <div style="font-size: 14px; font-weight: bold;">UPC Código Padre</div>
+      <div style="margin-top: 5px; font-size: 15px;">OC: <strong>${oc}</strong></div>
+      <div style="margin-top: 5px; font-size: 15px;">Departamento: <strong>${departamento}</strong></div>
+      <div style="margin-top: 5px; font-size: 15px;">Modelo: <strong>${modelo}</strong></div>
+      <div style="margin-top: 5px; font-size: 15px;">Descripción: <strong>${descripcion}</strong></div>
+      <div style="margin-top: 5px; font-size: 15px;">Color: <strong>${color}</strong></div>
+      <div style="margin-top: 5px; font-size: 15px;">Cedis: <strong>${cedisNombre}</strong></div>
+      <div style="font-size: 15px; font-weight: bold;">UPC Código Padre</div>
+      <div style="margin-top: 5px; font-size: 15px; text-align: center;">
+        <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
+        <br>
+        <strong>${tienda2}</strong>
+        <div style="margin-top: 5px; font-size: 15px;text-align: left;">Tallas: <strong>${tallas}</strong></div> 
+        <div style="margin-top: 5px; font-size: 15px;text-align: left;">Piezas: <strong>${pzas}</strong></div>
+        <div style="margin-bottom: 6px; font-size: 15px;text-align: left;">Total de piezas: <strong>${totalpiezas}</strong></div>
+      </div>
+    </div>
 
-                        <div style="margin-top: 5px; font-size: 14px; text-align: center;">
-                        <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
-                        <br>
-                       
-                        <strong>${tienda2}</strong>
-                        <div style="margin-top: 5px; font-size: 14px;text-align: left;">Tallas: <strong>${tallas}</strong></div> 
-                        <div style="margin-top: 5px; font-size: 14px;text-align: left;">Piezas: <strong>${pzas}</strong></div>
-                        <div style="margin-top: 5px; font-size: 14px;text-align: left;">Total de piezas: <strong>${totalpiezas}</strong></div>
-                        </div>
-                    </div>
-                    <div class="rfid-col" style="min-width: 240px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 220px; padding: 0;">
-                        <div class="nmf-display" style="margin:2; padding:0; line-height:1;">R F I D</div>
-                        <img src="imagenes_moda/solecito_negro.png" alt="Solecito" class="rfid-sun" style="border:none;width:60px;height:60px;margin:0; display:block; padding:0;" />
-                        <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:300px;height:230px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
-                    </div>
-                `; 
+    <!-- Columna derecha alineada al borde derecho -->
+    <div class="rfid-col" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; gap: 10px; padding: 0; min-width: 360px;">
+      <!-- Solecito -->
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div class="nmf-display" style="margin:1; padding:0; line-height:1;">R F I D</div>
+        <img src="imagenes_moda/solecito_negro.png" alt="Solecito" class="rfid-sun" style="border:none;width:60px;height:60px;margin:0; display:block; padding:0;" />
+  
+      <!-- Imagen modelo -->
+      <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:360px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
+    </div>
+  </div>
+`;
+
+
                 generalContainer.appendChild(card);
                 setTimeout(() => {
                     try {
@@ -1604,7 +1610,7 @@
                             <div id="modal-qr-${idx}"></div>
                             <div style="
                                 margin-top: 4px;
-                                font-size: 0.6rem;
+                                font-size: 0.8rem;
                                 font-weight: 700;
                                 letter-spacing: 2px;
                                 padding: 2px 5px;
@@ -1632,8 +1638,8 @@
                         qrDiv.innerHTML = "";
                         new QRCode(qrDiv, {
                             text: qrText,
-                            width: 115,
-                            height: 115,
+                            width: 120,
+                            height: 120,
                             correctLevel: QRCode.CorrectLevel.H
                         });
                     }
