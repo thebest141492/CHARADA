@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=NMF+Display:wght@700&display=swap" rel="stylesheet">
 
     <style>
         body, html {
@@ -92,7 +93,7 @@
             text-align: left;
             border-radius: 8px; /* Bordes más sutiles */
             transition: background-color 0.2s, transform 0.15s, color 0.2s, box-shadow 0.2s;
-            font-size: 0.9rem; /* Reducir el tamaño de la fuente */
+            font-size: 1.0rem; /* Reducir el tamaño de la fuente */
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -377,6 +378,33 @@
         }
         #data-table, .table {
             font-size: 0.8rem; /* Reducir el tamaño de la fuente de las tablas */
+        }
+        .nmf-display {
+            font-family: 'Knit2', Arial, sans-serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+        }
+        .rfid-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 8px;
+            margin-right: 8px;
+        }
+        .rfid-sun {
+            width: 60px;   /* antes 32px */
+            height: 60px;  /* antes 32px */
+            margin: 0 0 10px 0; /* más margen inferior */
+        }
+        .modelo-img {
+            width: 120px;   /* antes 60px */
+            height: 120px;  /* antes 60px */
+            object-fit: contain;
+            margin-top: 8px; /* más margen superior */
+            border-radius: 8px;
+            border: 1px solid #222;
+            background: #fff;
         }
     </style>
 </head>
@@ -687,7 +715,7 @@
                         <div>
                             <strong>Total de piezas:</strong> ${totalPiezas}
                             <button class="btn btn-success btn-sm ms-2" onclick="duplicateGroup(this)">Duplicar cajas</button>
-                            <button class="btn btn-danger btn-sm ms-1" style="display:none;" onclick="removeGroupDuplicate(this)">Eliminar duplicado</button>
+                            <button class="btn btn-danger btn-sm ms-1" style="display:none;" onclick="removeGroupDuplicate(this)">Eliminar</button>
                         </div>
                     `;
                     const cajaDiv = document.createElement('div');
@@ -695,7 +723,7 @@
                     cajaDiv.style.fontWeight = 'bold';
                     cajaDiv.style.fontSize = '1rem';
                     cajaDiv.style.marginTop = '5px';
-                    cajaDiv.innerHTML = `Caja: 1 de 1`;
+                    cajaDiv.innerHTML = `CAJA: 1 de 1`;
                     title.insertBefore(cajaDiv, title.children[1]);
                     groupContainer.appendChild(title);
                     const table = document.createElement('table');
@@ -1357,6 +1385,7 @@
                 });
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
+                const modeloImgSrc = `imagenes_moda/${modelo}.jpg`;
                 const card = document.createElement('div');
                 card.classList.add('card', 'p-3', 'shadow-sm');
                 card.style.width = '152mm';
@@ -1407,29 +1436,17 @@
                         <br>
                        
                         <strong>${tienda2}</strong>
-                       
                         <div style="margin-top: 5px; font-size: 14px;text-align: left;">Tallas: <strong>${tallas}</strong></div> 
-                         <div style="margin-top: 5px; font-size: 14px;text-align: left;">Piezas: <strong>${pzas}</strong></div>
-
+                        <div style="margin-top: 5px; font-size: 14px;text-align: left;">Piezas: <strong>${pzas}</strong></div>
                         <div style="margin-top: 5px; font-size: 14px;text-align: left;">Total de piezas: <strong>${totalpiezas}</strong></div>
-
-
                         </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-width: 50px;">
-
-                       
-                        
-
-
-
-
-                        
-                      
-                           
-                        </div>
+                    <div class="rfid-col" style="min-width: 240px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 220px; padding: 0;">
+                        <div class="nmf-display" style="margin:2; padding:0; line-height:1;">R F I D</div>
+                        <img src="imagenes_moda/solecito_negro.png" alt="Solecito" class="rfid-sun" style="border:none;width:60px;height:60px;margin:0; display:block; padding:0;" />
+                        <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:300px;height:230px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
                     </div>
-                `;
+                `; 
                 generalContainer.appendChild(card);
                 setTimeout(() => {
                     try {
@@ -1567,13 +1584,13 @@
                 card.innerHTML = `
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
                         <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
-                        <div style="margin-top: 6px; font-size: 12px;">Proveedor: 627375</div>
-                        <div style="margin-top: 5px; font-size: 12px;">OC: <strong>${oc}</strong></div>
-                        <div style="margin-top: 5px; font-size: 12px;">Cedis: <strong>${cedisNombre}</strong></div>
+                        <div style="margin-top: 6px; font-size: 12px; font-weight: bold; ">PROVEEDOR: 627375</div>
+                        <div style="margin-top: 5px; font-size: 12px; font-weight: bold;">OC: <strong>${oc}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; font-weight: bold;">CEDIS: <strong>${cedisNombre}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; color: #333;"><strong>${cajaTexto}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; text-align: center;">
                             <svg id="modal-barcode-${idx}" style="margin-top:1px;"></svg>
-                            <div style="font-size: 14px; font-weight: bold; margin-top:2px; text-align:center;">${codigoCol4}</div>
+                            <div style="font-size: 12px; font-weight: bold; margin-top:2px; text-align:center;">${codigoCol4}</div>
                         </div>
                     </div>
                     <div style="width: 151px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;">
@@ -1581,13 +1598,14 @@
                             display: flex;
                             flex-direction: column;
                             align-items: center;
+                            margin-top: 20px; /* <-- Aquí agregas más margen superior */
                             margin-bottom: 8px;
                         ">
                             <div id="modal-qr-${idx}"></div>
                             <div style="
                                 margin-top: 4px;
                                 font-size: 0.6rem;
-                                font-weight: bold;
+                                font-weight: 700;
                                 letter-spacing: 2px;
                                 padding: 2px 5px;
                             ">
@@ -1602,7 +1620,7 @@
                         JsBarcode(`#modal-barcode-${idx}`, codigoCol4, {
                             format: "CODE128",
                             width: 1.5,
-                            height: 42,
+                            height: 50,
                             displayValue: false,
                             margin: 0
                         });
@@ -1614,8 +1632,8 @@
                         qrDiv.innerHTML = "";
                         new QRCode(qrDiv, {
                             text: qrText,
-                            width: 110,
-                            height: 110,
+                            width: 115,
+                            height: 115,
                             correctLevel: QRCode.CorrectLevel.H
                         });
                     }
@@ -1691,7 +1709,7 @@
                     `<strong>Total de piezas:</strong> ${nuevoTotal}`
                 );
             }
-            showNotification('Fila duplicada correctamente.', 'success');
+            showNotification('Se duplicó correctamente.', 'success');
         }
         function duplicateRowModa(button) {
             const row = button.closest('tr');
@@ -1730,7 +1748,7 @@
                 g.setAttribute('data-caja', idx + 1);
                 g.setAttribute('data-total-cajas', totalCajas);
                 const cajaDiv = g.querySelector('.caja-info');
-                if (cajaDiv) cajaDiv.innerHTML = `Caja: ${idx + 1} de ${totalCajas}`;
+                if (cajaDiv) cajaDiv.innerHTML = `CAJA: ${idx + 1} de ${totalCajas}`;
                 const btns = g.querySelectorAll('button');
                 if (btns.length >= 2) {
                     btns[1].style.display = (idx > 0) ? 'inline-block' : 'none';
@@ -1739,7 +1757,7 @@
             clone.setAttribute('data-caja', totalCajas);
             clone.setAttribute('data-total-cajas', totalCajas);
             const cajaDivClone = clone.querySelector('.caja-info');
-            if (cajaDivClone) cajaDivClone.innerHTML = `Caja: ${totalCajas} de ${totalCajas}`;
+            if (cajaDivClone) cajaDivClone.innerHTML = `CAJA: ${totalCajas} de ${totalCajas}`;
             const btnsClone = clone.querySelectorAll('button');
             if (btnsClone.length >= 2) {
                 btnsClone[1].style.display = 'inline-block';
@@ -1764,7 +1782,7 @@
                 g.setAttribute('data-caja', idx + 1);
                 g.setAttribute('data-total-cajas', totalCajas);
                 const cajaDiv = g.querySelector('.caja-info');
-                if (cajaDiv) cajaDiv.innerHTML = `Caja: ${idx + 1} de ${totalCajas}`;
+                if (cajaDiv) cajaDiv.innerHTML = `CAJA: ${idx + 1} de ${totalCajas}`;
                 const btns = g.querySelectorAll('button');
                 if (btns.length >= 2) {
                     btns[1].style.display = (idx > 0) ? 'inline-block' : 'none';
