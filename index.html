@@ -541,11 +541,12 @@
                                 <option value="">Selecciona un modelo</option>
                             </select>
                             <button class="btn btn-danger" style="display: none;" id="clear-model-filter-moda" onclick="clearModelFilterModa()">Quitar filtro</button>
-                            <button class="btn btn-secondary" onclick="showUniqueStoresModa()">Tiendas</button>
-                            <select id="store-select-moda" class="form-select" style="display: none; width: auto;" onchange="filterByStoreModa()">
-                                <option value="">Selecciona una tienda</option>
+                            <!-- Cambiado a Coordinado -->
+                            <button class="btn btn-secondary" onclick="showUniqueCoordinadoModa()">Coordinado</button>
+                            <select id="coordinado-select-moda" class="form-select" style="display: none; width: auto;" onchange="filterByCoordinadoModa()">
+                                <option value="">Selecciona un coordinado</option>
                             </select>
-                            <button class="btn btn-danger" style="display: none;" id="clear-store-filter-moda" onclick="clearStoreFilterModa()">Quitar filtro</button>
+                            <button class="btn btn-danger" style="display: none;" id="clear-coordinado-filter-moda" onclick="clearCoordinadoFilterModa()">Quitar filtro</button>
                             <button class="btn btn-secondary" onclick="showUniqueCedisModa()">Cedis</button>
                             <select id="cedis-select-moda" class="form-select" style="display: none; width: auto;" onchange="filterByCedisModa()">
                                 <option value="">Selecciona un cedis</option>
@@ -620,6 +621,15 @@
             const titleElement = table.previousElementSibling;
             const piezas = parseInt(row.children[9]?.textContent || 0);
             row.remove();
+            // Si ya no quedan filas en el tbody, elimina todo el grupo (incluye encabezado)
+            const tbody = table.querySelector('tbody');
+            if (tbody && tbody.querySelectorAll('tr').length === 0) {
+                // Elimina el contenedor del grupo (incluye encabezado y tabla)
+                const groupContainer = table.parentNode;
+                groupContainer.parentNode.removeChild(groupContainer);
+                showNotification('Se eliminó correctamente', 'info');
+                return;
+            }
             // Recalcular total de piezas
             updateTotalPiezas(table, titleElement);
             showNotification('Se eliminó correctamente.', 'info');
@@ -801,20 +811,12 @@
                 jsonData.slice(1).forEach((row, idx) => {
                     const groupContainer = document.createElement('div');
                     groupContainer.classList.add('group-container', 'mb-4');
-                    // Título con info relevante de la fila
-                    const cedis = row[2] || '';
-                    const tienda = row[3] || '';
-                    const pedido = row[1] || '';
-                    const totalPiezas = parseInt(row[9]) || 0;
+                    // Título SIN info relevante de la fila (removido Cedis, Tienda, Pedido, Total de piezas)
                     const title = document.createElement('div');
                     title.classList.add('d-flex', 'justify-content-around', 'align-items-center', 'mb-3', 'p-2', 'bg-light', 'rounded', 'shadow-sm');
                     title.style.gap = '20px';
-                    title.innerHTML = `
-                        <div><strong>Cedis:</strong> ${cedis}</div>
-                        <div><strong>Tienda:</strong> ${tienda}</div>
-                        <div><strong>Pedido:</strong> ${pedido}</div>
-                        <div><strong>Total de piezas:</strong> ${totalPiezas}</div>
-                    `;
+                    // Solo deja el div vacío o con un espacio para mantener el diseño
+                    title.innerHTML = '';
                     groupContainer.appendChild(title);
                     const table = document.createElement('table');
                     table.classList.add('table', 'table-striped');
@@ -1029,13 +1031,20 @@
         // --- Filtros y funciones de impresión para MODA (idénticos a los de Resurtidos pero para los IDs *_moda) ---
 
         function showUniqueModelsModa() {
+            const selectedCoordinado = document.getElementById('coordinado-select-moda').value;
             const tables = document.querySelectorAll('#data-table-container-moda table');
             const uniqueModels = new Set();
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const modelCell = row.children[2]; // columna 3 (índice 2)
-                    if (modelCell) uniqueModels.add(modelCell.textContent.trim());
+                    const modelCell = row.children[2];
+                    const coordinadoCell = row.children[10];
+                    if (
+                        modelCell &&
+                        (!selectedCoordinado || (coordinadoCell && coordinadoCell.textContent.trim() === selectedCoordinado))
+                    ) {
+                        uniqueModels.add(modelCell.textContent.trim());
+                    }
                 });
             });
             const modelSelect = document.getElementById('model-select-moda');
@@ -1075,39 +1084,46 @@
             document.getElementById('clear-model-filter-moda').style.display = 'none';
         }
 
-        function showUniqueStoresModa() {
+        function showUniqueCoordinadoModa() {
+            const selectedModel = document.getElementById('model-select-moda').value;
             const tables = document.querySelectorAll('#data-table-container-moda table');
-            const uniqueStores = new Set();
+            const uniqueCoordinados = new Set();
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const storeCell = row.children[3];
-                    if (storeCell) uniqueStores.add(storeCell.textContent.trim());
+                    const modelCell = row.children[2];
+                    const coordinadoCell = row.children[10];
+                    if (
+                        coordinadoCell &&
+                        (!selectedModel || (modelCell && modelCell.textContent.trim() === selectedModel))
+                    ) {
+                        uniqueCoordinados.add(coordinadoCell.textContent.trim());
+                    }
                 });
             });
-            const storeSelect = document.getElementById('store-select-moda');
-            storeSelect.innerHTML = '<option value="">Selecciona una tienda</option>';
-            uniqueStores.forEach(store => {
+            const coordinadoSelect = document.getElementById('coordinado-select-moda');
+            coordinadoSelect.innerHTML = '<option value="">Selecciona un coordinado</option>';
+            uniqueCoordinados.forEach(coordinado => {
                 const option = document.createElement('option');
-                option.value = store;
-                option.textContent = store;
-                storeSelect.appendChild(option);
+                option.value = coordinado;
+                option.textContent = coordinado;
+                coordinadoSelect.appendChild(option);
             });
-            storeSelect.style.display = 'block';
-            document.getElementById('clear-store-filter-moda').style.display = 'block';
+            coordinadoSelect.style.display = 'block';
+            document.getElementById('clear-coordinado-filter-moda').style.display = 'block';
         }
 
-        function filterByStoreModa() {
-            const selectedStore = document.getElementById('store-select-moda').value;
+        function filterByCoordinadoModa() {
+            const selectedCoordinado = document.getElementById('coordinado-select-moda').value;
             const tables = document.querySelectorAll('#data-table-container-moda .group-container');
             tables.forEach(group => {
                 const table = group.querySelector('table');
                 let hasVisibleRows = false;
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const storeCell = row.children[3];
-                    if (storeCell) {
-                        const isVisible = selectedStore ? storeCell.textContent.trim() === selectedStore : true;
+                    const coordinadoCell = row.children[10]; // columna 11 (índice 10)
+                    if (coordinadoCell) {
+                        const isVisible = selectedCoordinado ? coordinadoCell.textContent.trim() === selectedCoordinado : true;
                         row.style.display = isVisible ? '' : 'none';
                         if (isVisible) hasVisibleRows = true;
                     }
@@ -1116,57 +1132,10 @@
             });
         }
 
-        function clearStoreFilterModa() {
-            document.getElementById('store-select-moda').value = '';
-            filterByStoreModa();
-            document.getElementById('clear-store-filter-moda').style.display = 'none';
-        }
-
-        function showUniqueCedisModa() {
-            const tables = document.querySelectorAll('#data-table-container-moda table');
-            const uniqueCedis = new Set();
-            tables.forEach(table => {
-                const rows = table.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const cedisCell = row.children[9]; // columna 10 (índice 9)
-                    if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
-                });
-            });
-            const cedisSelect = document.getElementById('cedis-select-moda');
-            cedisSelect.innerHTML = '<option value="">Selecciona un cedis</option>';
-            uniqueCedis.forEach(cedis => {
-                const option = document.createElement('option');
-                option.value = cedis;
-                option.textContent = cedis;
-                cedisSelect.appendChild(option);
-            });
-            cedisSelect.style.display = 'block';
-            document.getElementById('clear-cedis-filter-moda').style.display = 'block';
-        }
-
-        function filterByCedisModa() {
-            const selectedCedis = document.getElementById('cedis-select-moda').value;
-            const tables = document.querySelectorAll('#data-table-container-moda .group-container');
-            tables.forEach(group => {
-                const table = group.querySelector('table');
-                let hasVisibleRows = false;
-                const rows = table.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const cedisCell = row.children[9]; // columna 10 (índice 9)
-                    if (cedisCell) {
-                        const isVisible = selectedCedis ? cedisCell.textContent.trim() === selectedCedis : true;
-                        row.style.display = isVisible ? '' : 'none';
-                        if (isVisible) hasVisibleRows = true;
-                    }
-                });
-                group.style.display = hasVisibleRows ? '' : 'none';
-            });
-        }
-
-        function clearCedisFilterModa() {
-            document.getElementById('cedis-select-moda').value = '';
-            filterByCedisModa();
-            document.getElementById('clear-cedis-filter-moda').style.display = 'none';
+        function clearCoordinadoFilterModa() {
+            document.getElementById('coordinado-select-moda').value = '';
+            filterByCoordinadoModa();
+            document.getElementById('clear-coordinado-filter-moda').style.display = 'none';
         }
 
         function showUniqueStores() {
