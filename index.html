@@ -1,3 +1,6 @@
+anterior
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -405,47 +408,6 @@
             border-radius: 8px;
             border: 1px solid #222;
             background: #fff;
-        }
-        @media print {
-            html, body {
-                width: auto !important;
-                height: auto !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: #fff !important;
-                font-family: Arial, sans-serif !important;
-                color: #000 !important;
-            }
-            #modal-label-container {
-                display: block !important;
-                width: 100% !important;
-                min-width: 0 !important;
-                max-width: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                font-family: Arial, sans-serif !important;
-                color: #000 !important;
-            }
-            #modal-label-container .card,
-            #modal-label-container * {
-                font-family: Arial, sans-serif !important;
-                color: #000 !important;
-                text-shadow: none !important;
-                background: none !important;
-            }
-            #modal-label-container .card {
-                page-break-before: auto;
-                page-break-after: always;
-                break-before: auto;
-                break-after: page;
-                display: block !important;
-                width: 100mm !important;
-                height: 60mm !important;
-                max-width: none !important;
-                margin: 0 auto 0 auto !important;
-                box-shadow: none !important;
-                background: #fff !important;
-            }
         }
     </style>
 </head>
@@ -1403,11 +1365,11 @@
         <div class="rfid-col" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; gap: 10px; padding: 0; min-width: 360px;">
           <!-- Solecito -->
           <div style="display: flex; flex-direction: column; align-items: center;">
-            <div class="nmf-display" style="margin:0; padding:0; line-height:1;font-family: Arial, sans-serif; font-weight: bold;"><strong>R F I D</strong></div>
+            <div class="nmf-display" style="margin:0; padding:0; line-height:1;font-size: 35px;font-family: Arial, sans-serif; font-weight: bold;"><strong>R F I D</strong></div>
             <!-- Imagen de temporada debajo de RFID -->
             <img src="${temporadaImg}" alt="Temporada" style="width:60px;height:60px;margin:5px 0 0 0;display:block;" />
           <!-- Imagen modelo -->
-          <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:380px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
+          <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:160px;height:285px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
         </div>
       </div>
     `;
@@ -1606,10 +1568,62 @@
             printModal.show();
         }
 
-        function printModalLabels() {
+      function printModalLabels() {
             const printContents = document.getElementById('modal-label-container').innerHTML;
             const originalContents = document.body.innerHTML;
-            const printStyle = `
+            // Detectar si es Moda o Resurtidos por la presencia de la clase .rfid-col (Moda)
+            const isModa = printContents.includes('class="rfid-col"');
+            let printStyle = '';
+            if (isModa) {
+                // Estilo para MODA (152mm x 102mm)
+                printStyle = `
+                <style>
+                    @media print {
+                        html, body {
+                            width: auto !important;
+                            height: auto !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            background: #fff !important;
+                            font-family: Arial, sans-serif !important;
+                            color: #000 !important;
+                        }
+                        #modal-label-container {
+                            display: block !important;
+                            width: 100% !important;
+                            min-width: 0 !important;
+                            max-width: none !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            font-family: Arial, sans-serif !important;
+                            color: #000 !important;
+                        }
+                        #modal-label-container .card,
+                        #modal-label-container * {
+                            font-family: Arial, sans-serif !important;
+                            color: #000 !important;
+                            text-shadow: none !important;
+                            background: none !important;
+                        }
+                        #modal-label-container .card {
+                            page-break-before: auto;
+                            page-break-after: always;
+                            break-before: auto;
+                            break-after: page;
+                            display: block !important;
+                            width: 152mm !important;
+                            height: 102mm !important;
+                            max-width: none !important;
+                            margin: 0 auto 0 auto !important;
+                            box-shadow: none !important;
+                            background: #fff !important;
+                        }
+                    }
+                </style>
+                `;
+            } else {
+                // Estilo para RESURTIDOS (100mm x 60mm)
+                printStyle = `
                 <style>
                     @media print {
                         html, body {
@@ -1653,62 +1667,8 @@
                         }
                     }
                 </style>
-            `;
-            document.body.innerHTML = printStyle + printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-            window.location.reload();
-        }
-
-        // --- NUEVA FUNCIÓN PARA MODA ---
-        function printModalLabelsModa() {
-            const printContents = document.getElementById('modal-label-container').innerHTML;
-            const originalContents = document.body.innerHTML;
-            const printStyle = `
-                <style>
-                    @media print {
-                        html, body {
-                            width: auto !important;
-                            height: auto !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            background: #fff !important;
-                            font-family: Arial, sans-serif !important;
-                            color: #000 !important;
-                        }
-                        #modal-label-container {
-                            display: block !important;
-                            width: 100% !important;
-                            min-width: 0 !important;
-                            max-width: none !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            font-family: Arial, sans-serif !important;
-                            color: #000 !important;
-                        }
-                        #modal-label-container .card,
-                        #modal-label-container * {
-                            font-family: Arial, sans-serif !important;
-                            color: #000 !important;
-                            text-shadow: none !important;
-                            background: none !important;
-                        }
-                        #modal-label-container .card {
-                            page-break-before: auto;
-                            page-break-after: always;
-                            break-before: auto;
-                            break-after: page;
-                            display: block !important;
-                            width: 100mm !important;
-                            height: 60mm !important;
-                            max-width: none !important;
-                            margin: 0 auto 0 auto !important;
-                            box-shadow: none !important;
-                            background: #fff !important;
-                        }
-                    }
-                </style>
-            `;
+                `;
+            }
             document.body.innerHTML = printStyle + printContents;
             window.print();
             document.body.innerHTML = originalContents;
