@@ -552,6 +552,13 @@
                             </select>
                             <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter-moda" onclick="clearCedisFilterModa()">Quitar filtro</button>
                             <button class="btn btn-primary ms-auto" onclick="printContainerModa()">Imprimir</button>
+                            <!-- Nuevo selector de temporada -->
+                            <div class="ms-2">
+                                <select id="season-select-moda" class="form-select" style="width:auto;display:inline-block;" onchange="setSeasonModa()">
+                                    <option value="primavera-verano">Primavera-Verano</option>
+                                    <option value="otono-invierno">Otoño-Invierno</option>
+                                </select>
+                            </div>
                         </div>
                         <div id="print-container-moda" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
                         </div>
@@ -1386,6 +1393,15 @@
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
                 const modeloImgSrc = `imagenes_moda/${modelo}.jpg`;
+
+                // Determina la imagen de temporada según la selección
+                let temporadaImg = '';
+                if (selectedSeasonModa === 'primavera-verano') {
+                    temporadaImg = 'imagenes_moda/primavera-verano.png';
+                } else {
+                    temporadaImg = 'imagenes_moda/otoño-invierno.png';
+                }
+
                 const card = document.createElement('div');
                 card.classList.add('card', 'p-1', 'shadow-sm');
                 card.style.width = '152mm';
@@ -1417,26 +1433,28 @@
                     cedisNombre = 'CUAUTITLAN 7464';
                 }
                card.innerHTML = `
-  <div style="display: flex; justify-content: space-between; width: 100%; padding: 0;">
+ <div style="display: flex; justify-content: space-between; width: 100%; padding: 0;">
     <!-- Columna izquierda -->
+    
       <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
-      <div style="margin-top: 5px; font-size: 15px; font-weight: bold;"><strong>${razon}</strong></div>
+      <div style="margin-top: 5px; font-size: 14px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${razon}</strong></div>
 
-      <div style="margin-top: 5px; font-size: 15px;">OC: <strong>${oc}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;">Departamento: <strong>${departamento}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;">Modelo: <strong>${modelo}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;">Descripción: <strong>${descripcion}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;">Color: <strong>${color}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;">Cedis: <strong>${cedisNombre}</strong></div>
-      <div style="font-size: 15px; font-weight: bold;">UPC Código Padre</div>
-      <div style="margin-top: 5px; font-size: 15px; text-align: center;">
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;"><strong>OC: ${oc}</strong></div>
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Departamento: ${departamento}</strong></div>
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Modelo: ${modelo}</strong></div>
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Descripción: ${descripcion}</strong></div>
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Color: ${color}</strong></div>
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Cedis: ${cedisNombre}</strong></div>
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;"><strong>UPC Código Padre</strong></div>
+      <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;text-align: center;">
         <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
         <br>
         <strong>${tienda2}</strong>
-        <div style="margin-top: 5px; font-size: 15px;text-align: left;">Tallas: <strong>${tallas}</strong></div> 
-        <div style="margin-top: 5px; font-size: 15px;text-align: left;">Piezas: <strong>${pzas}</strong></div>
-        <div style="margin-bottom: 6px; font-size: 15px;text-align: left;">Total de piezas: <strong>${totalpiezas}</strong></div>
-      </div>
+        <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Tallas: ${tallas}</strong></div> 
+        <div style="margin-top: 5px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Piezas: ${pzas}</strong></div>
+        <div style="margin-top: 6px; font-size: 14px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Total de piezas: ${totalpiezas}</strong></div>
+       
+        </div>
     </div>
 
     <!-- Columna derecha alineada al borde derecho -->
@@ -1444,8 +1462,9 @@
       <!-- Solecito -->
       <div style="display: flex; flex-direction: column; align-items: center;">
         <div class="nmf-display" style="margin:1; padding:0; line-height:1;">R F I D</div>
-        <img src="imagenes_moda/solecito_negro.png" alt="Solecito" class="rfid-sun" style="border:none;width:60px;height:60px;margin:0; display:block; padding:0;" />
-  
+       
+        <!-- Imagen de temporada debajo de RFID -->
+        <img src="${temporadaImg}" alt="Temporada" style="width:60px;height:60px;margin:5px 0 0 0;display:block;" />
       <!-- Imagen modelo -->
       <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:360px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
     </div>
@@ -1805,6 +1824,14 @@
                 const titleElement = g.querySelector('.d-flex');
                 updateTotalPiezas(table, titleElement);
             });
+        }
+
+        // Variable global para la temporada seleccionada
+        let selectedSeasonModa = 'primavera-verano';
+
+        function setSeasonModa() {
+            const sel = document.getElementById('season-select-moda');
+            selectedSeasonModa = sel.value;
         }
     </script>
 </body>
