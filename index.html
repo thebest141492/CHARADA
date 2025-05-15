@@ -406,6 +406,47 @@
             border: 1px solid #222;
             background: #fff;
         }
+        @media print {
+            html, body {
+                width: auto !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+                font-family: Arial, sans-serif !important;
+                color: #000 !important;
+            }
+            #modal-label-container {
+                display: block !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-family: Arial, sans-serif !important;
+                color: #000 !important;
+            }
+            #modal-label-container .card,
+            #modal-label-container * {
+                font-family: Arial, sans-serif !important;
+                color: #000 !important;
+                text-shadow: none !important;
+                background: none !important;
+            }
+            #modal-label-container .card {
+                page-break-before: auto;
+                page-break-after: always;
+                break-before: auto;
+                break-after: page;
+                display: block !important;
+                width: 100mm !important;
+                height: 60mm !important;
+                max-width: none !important;
+                margin: 0 auto 0 auto !important;
+                box-shadow: none !important;
+                background: #fff !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1507,7 +1548,7 @@
                         <div style="margin-top: 6px; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold; "><strong>PROVEEDOR: 627375</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>OC: ${oc}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>CEDIS: ${cedisNombre}</strong></div>
-                        <div style="margin-top: 5px; font-size: 12px; color: #333;font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${cajaTexto}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${cajaTexto}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; text-align: center;">
                             <svg id="modal-barcode-${idx}" style="margin-top:1px;"></svg>
                             <div style="font-size: 14px; font-family: Arial, sans-serif; font-weight: bold; margin-top:2px; text-align:center;"><strong>${codigoCol4}</strong></div>
