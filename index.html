@@ -797,20 +797,15 @@
                 const container = document.getElementById('data-table-container-moda');
                 container.innerHTML = '';
                 const headers = jsonData[0];
-                const groupedData = {};
-                jsonData.slice(1).forEach(row => {
-                    const key = `${row[2]} - ${row[3]}`;
-                    if (!groupedData[key]) {
-                        groupedData[key] = [];
-                    }
-                    groupedData[key].push(row);
-                });
-                Object.keys(groupedData).forEach(key => {
+                // Mostrar cada fila como grupo independiente (sin agrupar)
+                jsonData.slice(1).forEach((row, idx) => {
                     const groupContainer = document.createElement('div');
                     groupContainer.classList.add('group-container', 'mb-4');
-                    const [cedis, tienda] = key.split(' - ');
-                    const pedido = groupedData[key][0][1];
-                    const totalPiezas = groupedData[key].reduce((sum, row) => sum + (parseInt(row[9]) || 0), 0);
+                    // Título con info relevante de la fila
+                    const cedis = row[2] || '';
+                    const tienda = row[3] || '';
+                    const pedido = row[1] || '';
+                    const totalPiezas = parseInt(row[9]) || 0;
                     const title = document.createElement('div');
                     title.classList.add('d-flex', 'justify-content-around', 'align-items-center', 'mb-3', 'p-2', 'bg-light', 'rounded', 'shadow-sm');
                     title.style.gap = '20px';
@@ -839,30 +834,28 @@
                     thead.appendChild(headerRow);
                     table.appendChild(thead);
                     const tbody = document.createElement('tbody');
-                    groupedData[key].forEach(row => {
-                        const tr = document.createElement('tr');
-                        row.forEach((cell, index) => {
-                            const td = document.createElement('td');
-                            td.textContent = cell;
-                            if (index === 0 || index === 1) td.style.display = 'none';
-                            if (index === 9) td.setAttribute('contenteditable', 'false');
-                            tr.appendChild(td);
-                        });
-                        const actionTd = document.createElement('td');
-                        actionTd.innerHTML = `
-                            <button class="btn btn-warning btn-sm" onclick="enableEditModa(this)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteRowModa(this)">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                            <button class="btn btn-info btn-sm" onclick="duplicateRowModa(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        `;
-                        tr.appendChild(actionTd);
-                        tbody.appendChild(tr);
+                    const tr = document.createElement('tr');
+                    row.forEach((cell, index) => {
+                        const td = document.createElement('td');
+                        td.textContent = cell;
+                        if (index === 0 || index === 1) td.style.display = 'none';
+                        if (index === 9) td.setAttribute('contenteditable', 'false');
+                        tr.appendChild(td);
                     });
+                    const actionTd = document.createElement('td');
+                    actionTd.innerHTML = `
+                        <button class="btn btn-warning btn-sm" onclick="enableEditModa(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteRowModa(this)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button class="btn btn-info btn-sm" onclick="duplicateRowModa(this)">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    `;
+                    tr.appendChild(actionTd);
+                    tbody.appendChild(tr);
                     table.appendChild(tbody);
                     groupContainer.appendChild(table);
                     container.appendChild(groupContainer);
@@ -1041,7 +1034,7 @@
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const modelCell = row.children[5];
+                    const modelCell = row.children[2]; // columna 3 (índice 2)
                     if (modelCell) uniqueModels.add(modelCell.textContent.trim());
                 });
             });
@@ -1065,7 +1058,7 @@
                 let hasVisibleRows = false;
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const modelCell = row.children[5];
+                    const modelCell = row.children[2]; // columna 3 (índice 2)
                     if (modelCell) {
                         const isVisible = selectedModel ? modelCell.textContent.trim() === selectedModel : true;
                         row.style.display = isVisible ? '' : 'none';
@@ -1135,7 +1128,7 @@
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const cedisCell = row.children[7];
+                    const cedisCell = row.children[9]; // columna 10 (índice 9)
                     if (cedisCell) uniqueCedis.add(cedisCell.textContent.trim());
                 });
             });
@@ -1159,7 +1152,7 @@
                 let hasVisibleRows = false;
                 const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const cedisCell = row.children[2];
+                    const cedisCell = row.children[9]; // columna 10 (índice 9)
                     if (cedisCell) {
                         const isVisible = selectedCedis ? cedisCell.textContent.trim() === selectedCedis : true;
                         row.style.display = isVisible ? '' : 'none';
@@ -1300,100 +1293,35 @@
             const generalContainer = document.createElement('div');
             generalContainer.style.display = 'block';
             groups.forEach((group, idx) => {
+                if (group.style.display === 'none') return; // Solo imprime los visibles (filtrados)
                 const titleElement = group.querySelector('div');
-                const oc = titleElement.querySelector('div:nth-child(3)').textContent.split(': ')[1];
                 const table = group.querySelector('table');
-                const rows = table.querySelectorAll('tbody tr');
-
-
-                // Extraer departamento 13 (índice 12) de la primera fila
-                let departamento = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[12];
-                if (col13) departamento = col13.textContent.trim();
-                }
-
-                 // Extraer modelo 3 (índice 2) de la primera fila
-                 let modelo = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[2];
-                if (col13) modelo = col13.textContent.trim();
-                }
-
-                // Extraer descripcion 12 (índice 11) de la primera fila
-                let descripcion = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[11];
-                if (col13) descripcion = col13.textContent.trim();
-                }
-
-                 // Extraer descripcion 4 (índice 3) de la primera fila
-                 let color = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[3];
-                if (col13) color = col13.textContent.trim();
-                }
-
-                // Extraer descripcion 9 (índice 8) de la primera fila
-                let cedis2 = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[8];
-                if (col13) cedis2 = col13.textContent.trim();
-                }
-
-                
-                // Extraer tienda 2 (índice 1) de la primera fila
-                let tienda2 = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[1];
-                if (col13) tienda2 = col13.textContent.trim();
-                }
-
-                 // Extraer tallas 5 (índice 4) de la primera fila
-                 let tallas = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[4];
-                if (col13) tallas = col13.textContent.trim();
-                }
-
-                 // Extraer distribucion 7 (índice 6) de la primera fila
-                 let pzas = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[6];
-                if (col13) pzas = col13.textContent.trim();
-                }
-
-
-                 // Extraer razon social 14 (índice 13) de la primera fila
-                 let razon = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[13];
-                if (col13) razon = col13.textContent.trim();
-                }
-
-                  // Extraer total de pzas 8 (índice 7) de la primera fila
-                  let totalpiezas = '';
-                if (rows.length > 0) {
-                 const col13 = rows[0].children[7];
-                if (col13) totalpiezas = col13.textContent.trim();
-                }
-
-
-
+                const row = table.querySelector('tbody tr');
+                if (row.style.display === 'none') return; // Solo imprime filas visibles
+                // Extraer datos de la fila
+                let departamento = row.children[12]?.textContent.trim() || '';
+                let modelo = row.children[2]?.textContent.trim() || '';
+                let descripcion = row.children[11]?.textContent.trim() || '';
+                let color = row.children[3]?.textContent.trim() || '';
+                let cedis2 = row.children[8]?.textContent.trim() || '';
+                let tienda2 = row.children[1]?.textContent.trim() || '';
+                let tallas = row.children[4]?.textContent.trim() || '';
+                let pzas = row.children[6]?.textContent.trim() || '';
+                let razon = row.children[13]?.textContent.trim() || '';
+                let totalpiezas = row.children[7]?.textContent.trim() || '';
+                let oc = row.children[1]?.textContent.trim() || '';
+                // Para el QR y piezas
                 let codigosYcantidades = [];
                 let totalPiezas = 0;
-                rows.forEach(row => {
-                    const codigo = row.children[4]?.textContent.trim();
-                    const cantidad = row.children[9]?.textContent.trim();
-                    if (codigo && cantidad) {
-                        codigosYcantidades.push(codigo + '\n' + cantidad);
-                        totalPiezas += parseInt(cantidad) || 0;
-                    }
-                });
+                const codigo = row.children[4]?.textContent.trim();
+                const cantidad = row.children[9]?.textContent.trim();
+                if (codigo && cantidad) {
+                    codigosYcantidades.push(codigo + '\n' + cantidad);
+                    totalPiezas += parseInt(cantidad) || 0;
+                }
                 const qrText = codigosYcantidades.join('\n');
                 const totalCodigos = codigosYcantidades.length;
                 const modeloImgSrc = `imagenes_moda/${modelo}.jpg`;
-
                 // Determina la imagen de temporada según la selección
                 let temporadaImg = '';
                 if (selectedSeasonModa === 'primavera-verano') {
@@ -1401,17 +1329,6 @@
                 } else {
                     temporadaImg = 'imagenes_moda/otoño-invierno.png';
                 }
-
-                const card = document.createElement('div');
-                card.classList.add('card', 'p-1', 'shadow-sm');
-                card.style.width = '152mm';
-                card.style.height = '102mm';
-                card.style.display = 'flex';
-                card.style.flexDirection = 'row';
-                card.style.justifyContent = 'space-between';
-                card.style.alignItems = 'flex-start';
-                card.style.textAlign = 'left';
-                card.style.position = 'relative';
                 let cedisNombre = cedis2;
                 if (cedis2 === '4188') {
                     cedisNombre = 'MÉRIDA 4188';
@@ -1432,50 +1349,49 @@
                 } else if (cedis2 === '7464') {
                     cedisNombre = 'CUAUTITLAN 7464';
                 }
-               card.innerHTML = `
- <div style="display: flex; justify-content: space-between; width: 100%; padding: 0;">
-    <!-- Columna izquierda -->
-    
-      <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
-      <div style="font-size: 15px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${razon}</strong></div>
-
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>OC: ${oc}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Departamento: ${departamento}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Modelo: ${modelo}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Descripción: ${descripcion}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Color: ${color}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Cedis: ${cedisNombre}</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>UPC Código Padre</strong></div>
-      <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: center;">
-        <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
-        <br>
-        <strong>${tienda2}</strong>
-        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Tallas: ${tallas}</strong></div> 
-        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Piezas: ${pzas}</strong></div>
-        <div style="margin-top: 6px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Total de piezas: ${totalpiezas}</strong></div>
-       
+                const card = document.createElement('div');
+                card.classList.add('card', 'p-1', 'shadow-sm');
+                card.style.width = '152mm';
+                card.style.height = '102mm';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'row';
+                card.style.justifyContent = 'space-between';
+                card.style.alignItems = 'flex-start';
+                card.style.textAlign = 'left';
+                card.style.position = 'relative';
+                card.innerHTML = `
+     <div style="display: flex; justify-content: space-between; width: 100%; padding: 0;">
+        <!-- Columna izquierda -->
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+          <div style="font-size: 15px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${razon}</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>OC: ${oc}</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Departamento: ${departamento}</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Modelo: ${modelo}</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Descripción: ${descripcion}</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Color: ${color}</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Cedis: ${cedisNombre}</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>UPC Código Padre</strong></div>
+          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: center;">
+            <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
+            <br>
+            <strong>${tienda2}</strong>
+            <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Tallas: ${tallas}</strong></div> 
+            <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Piezas: ${pzas}</strong></div>
+            <div style="margin-top: 6px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Total de piezas: ${totalpiezas}</strong></div>
+            </div>
         </div>
-    </div>
-
-    <!-- Columna derecha alineada al borde derecho -->
-    <div class="rfid-col" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; gap: 10px; padding: 0; min-width: 360px;">
-
-      <!-- Solecito -->
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <div class="nmf-display" style="margin:0; padding:0; line-height:1;font-family: Arial, sans-serif; font-weight: bold;"><strong>R F I D</strong></div>
-
-
-
-
-        <!-- Imagen de temporada debajo de RFID -->
-        <img src="${temporadaImg}" alt="Temporada" style="width:60px;height:60px;margin:5px 0 0 0;display:block;" />
-      <!-- Imagen modelo -->
-      <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:380px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
-    </div>
-  </div>
-`;
-
-
+        <!-- Columna derecha alineada al borde derecho -->
+        <div class="rfid-col" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; gap: 10px; padding: 0; min-width: 360px;">
+          <!-- Solecito -->
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="nmf-display" style="margin:0; padding:0; line-height:1;font-family: Arial, sans-serif; font-weight: bold;"><strong>R F I D</strong></div>
+            <!-- Imagen de temporada debajo de RFID -->
+            <img src="${temporadaImg}" alt="Temporada" style="width:60px;height:60px;margin:5px 0 0 0;display:block;" />
+          <!-- Imagen modelo -->
+          <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:380px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
+        </div>
+      </div>
+    `;
                 generalContainer.appendChild(card);
                 setTimeout(() => {
                     try {
@@ -1487,9 +1403,6 @@
                             margin: 0
                         });
                     } catch (e) {}
-                }, 0);
-                setTimeout(() => {
-                    
                 }, 0);
             });
             modalLabelContainer.appendChild(generalContainer);
