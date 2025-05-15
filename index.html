@@ -610,6 +610,15 @@
             const titleElement = table.previousElementSibling;
             const piezas = parseInt(row.children[9]?.textContent || 0);
             row.remove();
+            // Si ya no quedan filas en el tbody, elimina todo el grupo (incluye encabezado)
+            const tbody = table.querySelector('tbody');
+            if (tbody && tbody.querySelectorAll('tr').length === 0) {
+                // Elimina el contenedor del grupo (incluye encabezado y tabla)
+                const groupContainer = table.parentNode;
+                groupContainer.parentNode.removeChild(groupContainer);
+                showNotification('Se eliminó correctamente', 'info');
+                return;
+            }
             // Recalcular total de piezas
             updateTotalPiezas(table, titleElement);
             showNotification('Se eliminó correctamente.', 'info');
