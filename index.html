@@ -1589,14 +1589,14 @@
                 card.style.position = 'relative';
                 card.innerHTML = `
                     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
-                        <div style="font-size: 12px; font-weight: bold;">LA NUIT SA DE CV</div>
-                        <div style="margin-top: 6px; font-size: 12px; font-weight: bold; ">PROVEEDOR: 627375</div>
-                        <div style="margin-top: 5px; font-size: 12px; font-weight: bold;">OC: <strong>${oc}</strong></div>
-                        <div style="margin-top: 5px; font-size: 12px; font-weight: bold;">CEDIS: <strong>${cedisNombre}</strong></div>
-                        <div style="margin-top: 5px; font-size: 12px; color: #333;"><strong>${cajaTexto}</strong></div>
+                        <div style="font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>LA NUIT SA DE CV</strong></div>
+                        <div style="margin-top: 6px; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold; "><strong>PROVEEDOR: 627375</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>OC: ${oc}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>CEDIS: ${cedisNombre}</strong></div>
+                        <div style="margin-top: 5px; font-size: 12px; color: #333;font-size: 12px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${cajaTexto}</strong></div>
                         <div style="margin-top: 5px; font-size: 12px; text-align: center;">
                             <svg id="modal-barcode-${idx}" style="margin-top:1px;"></svg>
-                            <div style="font-size: 12px; font-weight: bold; margin-top:2px; text-align:center;">${codigoCol4}</div>
+                            <div style="font-size: 14px; font-family: Arial, sans-serif; font-weight: bold; margin-top:2px; text-align:center;"><strong>${codigoCol4}</strong></div>
                         </div>
                     </div>
                     <div style="width: 151px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;">
@@ -1611,11 +1611,12 @@
                             <div style="
                                 margin-top: 4px;
                                 font-size: 0.8rem;
+                                font-family: Arial, sans-serif;
                                 font-weight: 700;
                                 letter-spacing: 2px;
                                 padding: 2px 5px;
                             ">
-                                Códigos:${totalCodigos}/Piezas:${totalPiezas}
+                                <strong>Códigos:${totalCodigos}/Piezas:${totalPiezas}</strong>
                             </div>
                         </div>
                     </div>
