@@ -1565,7 +1565,7 @@
             printModal.show();
         }
 
-        function printModalLabels() {
+      function printModalLabels() {
             const printContents = document.getElementById('modal-label-container').innerHTML;
             const originalContents = document.body.innerHTML;
             const printStyle = `
@@ -1577,6 +1577,8 @@
                             margin: 0 !important;
                             padding: 0 !important;
                             background: #fff !important;
+                            font-family: Arial, sans-serif !important;
+                            color: #000 !important;
                         }
                         #modal-label-container {
                             display: block !important;
@@ -1585,6 +1587,15 @@
                             max-width: none !important;
                             margin: 0 !important;
                             padding: 0 !important;
+                            font-family: Arial, sans-serif !important;
+                            color: #000 !important;
+                        }
+                        #modal-label-container .card,
+                        #modal-label-container * {
+                            font-family: Arial, sans-serif !important;
+                            color: #000 !important;
+                            text-shadow: none !important;
+                            background: none !important;
                         }
                         #modal-label-container .card {
                             page-break-before: auto;
