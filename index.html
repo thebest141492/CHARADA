@@ -1379,38 +1379,82 @@
                 card.style.textAlign = 'left';
                 card.style.position = 'relative';
                 card.innerHTML = `
-     <div style="display: flex; justify-content: space-between; width: 100%; padding: 0;">
-        <!-- Columna izquierda -->
-          <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
-          <div style="font-size: 15px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${razon}</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>OC: ${oc}</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Departamento: ${departamento}</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Modelo: ${modelo}</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Descripción: ${descripcion}</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Color: ${color}</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Cedis: ${cedisNombre}</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>UPC Código Padre</strong></div>
-          <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: center;">
+<style>
+    @media print {
+        html, body {
+            width: auto !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+            font-family: Arial, sans-serif !important;
+            color: #000 !important;
+        }
+        #modal-label-container {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: Arial, sans-serif !important;
+            color: #000 !important;
+        }
+        #modal-label-container .card,
+        #modal-label-container * {
+            font-family: Arial, sans-serif !important;
+            color: #000 !important;
+            text-shadow: none !important;
+            background: none !important;
+        }
+        #modal-label-container .card {
+            page-break-before: auto;
+            page-break-after: always;
+            break-before: auto;
+            break-after: page;
+            display: block !important;
+            width: 100mm !important;
+            height: 60mm !important;
+            max-width: none !important;
+            margin: 0 auto 0 auto !important;
+            box-shadow: none !important;
+            background: #fff !important;
+        }
+    }
+</style>
+<div style="display: flex; justify-content: space-between; width: 100%; padding: 0;">
+    <!-- Columna izquierda -->
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start;">
+        <div style="font-size: 15px; font-family: Arial, sans-serif; font-weight: bold;"><strong>${razon}</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>OC: ${oc}</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Departamento: ${departamento}</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Modelo: ${modelo}</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Descripción: ${descripcion}</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Color: ${color}</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>Cedis: ${cedisNombre}</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;"><strong>UPC Código Padre</strong></div>
+        <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: center;">
             <svg id="modal-barcode-moda-${idx}" style="margin-top:1px;"></svg>
             <br>
             <strong>${tienda2}</strong>
             <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Tallas: ${tallas}</strong></div> 
             <div style="margin-top: 5px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Piezas: ${pzas}</strong></div>
             <div style="margin-top: 6px; font-size: 15px;font-family: Arial, sans-serif; font-weight: bold;text-align: left;"><strong>Total de piezas: ${totalpiezas}</strong></div>
-            </div>
         </div>
-        <!-- Columna derecha alineada al borde derecho -->
-        <div class="rfid-col" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; gap: 10px; padding: 0; min-width: 360px;">
-          <!-- Solecito -->
-          <div style="display: flex; flex-direction: column; align-items: center;">
+    </div>
+    <!-- Columna derecha alineada al borde derecho -->
+    <div class="rfid-col" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; gap: 10px; padding: 0; min-width: 360px;">
+        <!-- Solecito -->
+        <div style="display: flex; flex-direction: column; align-items: center;">
             <div class="nmf-display" style="margin:0; padding:0; line-height:1;font-family: Arial, sans-serif; font-weight: bold;"><strong>R F I D</strong></div>
             <!-- Imagen de temporada debajo de RFID -->
             <img src="${temporadaImg}" alt="Temporada" style="width:60px;height:60px;margin:5px 0 0 0;display:block;" />
-          <!-- Imagen modelo -->
-          <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:380px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
+            <!-- Imagen modelo -->
+            <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:380px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
         </div>
-      </div>
-    `;
+    </div>
+</div>
+`;
                 generalContainer.appendChild(card);
                 setTimeout(() => {
                     try {
