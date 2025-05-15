@@ -1466,7 +1466,7 @@
         <!-- Imagen de temporada debajo de RFID -->
         <img src="${temporadaImg}" alt="Temporada" style="width:60px;height:60px;margin:5px 0 0 0;display:block;" />
       <!-- Imagen modelo -->
-      <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:360px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
+      <img src="${modeloImgSrc}" alt="Modelo" class="modelo-img" style="border:none;width:380px;height:280px;margin:0; display:block; padding:0;" onerror="this.style.display='none';" />
     </div>
   </div>
 `;
@@ -1477,8 +1477,8 @@
                     try {
                         JsBarcode(`#modal-barcode-moda-${idx}`, tienda2, {
                             format: "CODE128",
-                            width: 1.5,
-                            height: 30,
+                            width: 2,
+                            height: 40,
                             displayValue: false,
                             margin: 0
                         });
