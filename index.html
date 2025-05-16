@@ -1,4 +1,4 @@
-anterior
+con load
 
 
 <!DOCTYPE html>
@@ -421,12 +421,72 @@ anterior
         #data-table-container .group-container:hover {
             box-shadow: 0 8px 24px rgba(78,84,200,0.18);
         }
+        /* Loader styles */
+        #loader-overlay {
+            position: fixed;
+            z-index: 3000;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100vw; height: 100vh;
+            /*background: linear-gradient(135deg, #110258, #0863ff);*/
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        #loader-overlay img {
+            width: 350px;
+            height: 350px;
+            margin-bottom: 20px;
+        }
+        #loader-overlay span {
+            color: #fff;
+            font-size: 1.9rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 8px #000;
+        }
+#loader-overlay {
+    background: linear-gradient(-45deg, #110258, #0863ff, #3a0ca3, #4361ee);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    30% { background-position: 100% 50%; }
+    50% { background-position: 0% 50%; }
+}
+
+
+
+        
     </style>
 </head>
 <body>
-    <div class="page-container">
+    <!-- Loader overlay -->
+    <div id="loader-overlay">
+        <img src="https://media.tenor.com/QhRvvwpCdVoAAAAj/rocket.gif" alt="Cargando..." />
+       <span id="loading-text">Cargando aplicación<span id="dots"></span></span>
+
+        <script>
+    const dots = document.getElementById("dots");
+    let count = 0;
+
+    setInterval(() => {
+        count = (count + 1) % 5;
+        dots.textContent = '.'.repeat(count);
+    }, 500);
+</script>
+
+    </div>
+    <div class="page-container" style="display:none;">
 
 
+
+
+
+
+
+        
 
         <!-- Menú interactivo -->
         <nav id="menu-bar" class="menu-bar visible">
@@ -525,11 +585,13 @@ anterior
                             <select id="model-select" class="form-select" style="display: none; width: auto;" onchange="filterByModel()">
                                 <option value="">Selecciona un modelo</option>
                             </select>
+
                             <button class="btn btn-danger" style="display: none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
                             <button class="btn btn-secondary" onclick="showUniqueStores()">Tiendas</button>
                             <select id="store-select" class="form-select" style="display: none; width: auto;" onchange="filterByStore()">
                                 <option value="">Selecciona una tienda</option>
                             </select>
+                            
                             <button class="btn btn-danger" style="display: none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
                             <button class="btn btn-secondary" onclick="showUniqueCedis()">Cedis</button>
                             <select id="cedis-select" class="form-select" style="display: none; width: auto;" onchange="filterByCedis()">
@@ -603,12 +665,16 @@ anterior
                 </div>
                 <div class="modal-body">
                     <div id="modal-label-container" 
-                        style="width: 90mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; border: 1px solid #ccc; padding: 10px;">
+                        style="width: 120mm; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; border: 1px solid #ccc; padding: 10px;">
                     </div>
+
+                    
                 </div>
             </div>
         </div>
     </div>
+
+    
 
     <footer class="footer">
         <p>&copy; 2025 Impresion de Códigos QR Ferreira. Todos los derechos reservados.</p>
@@ -619,6 +685,13 @@ anterior
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="script.js"></script>
     <script>
+        // Loader logic: Oculta el loader y muestra la app tras 3 segundos
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('loader-overlay').style.display = 'none';
+                document.querySelector('.page-container').style.display = '';
+            }, 4000);
+        });
         function deleteRow(button) {
             const row = button.closest('tr');
             const table = row.closest('table');
@@ -1580,7 +1653,7 @@ anterior
             printModal.show();
         }
 
-      function printModalLabels() {
+        function printModalLabels() {
             const printContents = document.getElementById('modal-label-container').innerHTML;
             const originalContents = document.body.innerHTML;
             // Detectar si es Moda o Resurtidos por la presencia de la clase .rfid-col (Moda)
