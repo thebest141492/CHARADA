@@ -13,6 +13,8 @@ con load
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=NMF+Display:wght@700&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 
 <style>
   body {
@@ -591,7 +593,8 @@ con load
                 <!-- Ventas Resurtidos -->
                 <section id="sales-container" class="container-fluid" style="display: none; height: 100vh;">
                     <div class="card p-4 h-100"style="margin-top: 20px;">
-                        <h2 class="text-center">Impresión de códigos</h2>
+                       <h2 class="text-center animate__animated animate__slideInLeft">Impresión de códigos</h2>
+
                         <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
                             <button class="btn btn-secondary" onclick="showUniqueModels()">Modelos</button>
                             <select id="model-select" class="form-select" style="display: none; width: auto;" onchange="filterByModel()">
@@ -619,10 +622,19 @@ con load
                     </div>
                 </section>
 
+
+
+
+
+
+                
+
                 <!-- Ventas Moda -->
                 <section id="sales-container-moda" class="container-fluid" style="display: none; height: 100vh;">
                     <div class="card p-4 h-100"style="margin-top: 20px;">
-                        <h2 class="text-center">Impresión de códigos Moda</h2>
+                         <!--<h2 class="text-center">Impresión de códigos Moda</h2>-->
+                        <h2 class="text-center animate__animated animate__slideInLeft">Impresión de códigos Moda</h2>
+
                         <!-- Filtros Moda -->
                         <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
                             <button class="btn btn-secondary" onclick="showUniqueModelsModa()">Modelos</button>
