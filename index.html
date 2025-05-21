@@ -482,7 +482,7 @@ con load
     let count = 0;
 
     setInterval(() => {
-        count = (count + 1) % 5;
+        count = (count + 1) % 4;
         dots.textContent = '.'.repeat(count);
     }, 500);
 </script>
@@ -1777,13 +1777,31 @@ con load
                     }
                 </style>
                 `;
+                
             }
-            document.body.innerHTML = printStyle + printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-            window.location.reload();
+
+            // Crear ventana de impresión temporal
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printStyle + printContents);
+            printWindow.document.close();
+            printWindow.focus();
+
+            // Esperar a que el contenido se cargue antes de imprimir
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close();
+            };
+            // No modificar ni recargar el contenido de la página principal ni cerrar el modal aquí
         }
 
+
+
+
+
+
+
+
+        
         function duplicateRow(button) {
             const row = button.closest('tr');
             const clone = row.cloneNode(true);
