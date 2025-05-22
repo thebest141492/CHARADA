@@ -111,6 +111,9 @@ function generarQR() {
     });
 }
 
+
+
+
 function handleExcelUpload() {
     const fileInput = document.getElementById('excel-file');
     const file = fileInput.files[0];
@@ -124,10 +127,16 @@ function handleExcelUpload() {
             const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
             generateTable(jsonData);
+
+            
         };
         reader.readAsArrayBuffer(file);
     }
 }
+
+
+
+
 
 function generateTable(data) {
     const tableHead = document.querySelector('#data-table thead');
