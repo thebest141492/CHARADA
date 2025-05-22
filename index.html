@@ -431,6 +431,8 @@ con load
         #data-table-container .group-container:hover {
             box-shadow: 0 8px 24px rgba(78,84,200,0.18);
         }
+
+
         /* Loader styles */
         #loader-overlay {
             position: fixed;
@@ -465,10 +467,14 @@ con load
     30% { background-position: 100% 50%; }
     50% { background-position: 0% 50%; }
 }
+
+
+
  /*menu de boton luminoso*/
 .menu-item.active {
     border-left: 5px solid #ffeb3b;
     padding-left: 10px;
+    
 }
 
 
@@ -558,9 +564,10 @@ con load
         </nav>
 
         <!-- Contenido principal -->
-        <div id="main-content" class="main-content menu-visible" style="display: block;">
-            <header class="header d-flex justify-content-between align-items-center mb-3">
-                <button id="menu-toggle-btn" class="btn btn-outline-secondary" onclick="toggleMenu()">☰</button>
+       <div id="main-content" class="main-content menu-visible hidden-content">
+    <header class="header d-flex justify-content-between align-items-center mb-3">
+        <button id="menu-toggle-btn" class="btn btn-outline-secondary" onclick="toggleMenu()">☰</button>
+    </header>
             </header>
 
             <main class="main-content">
@@ -598,6 +605,8 @@ con load
                         
                     </div>
                 </section>
+
+                
 
                 <!-- Generador de QR Moda -->
                 <section id="qr-generator-moda" class="container" style="display: none;">
@@ -953,6 +962,9 @@ con load
                 });
             };
             reader.readAsArrayBuffer(file);
+            // Notificación al cargar archivo
+            showNotification('¡Archivo cargado con éxito!', 'success');
+
         }
 
         function handleExcelUploadModa() {
@@ -1026,6 +1038,9 @@ con load
                 });
             };
             reader.readAsArrayBuffer(file);
+            // Notificación al cargar archivo
+            showNotification('¡Archivo cargado con éxito!', 'success');
+
         }
 
         function toggleMenu() {
@@ -1083,6 +1098,8 @@ con load
 
         const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('excel-file');
+
+        
         dropArea.addEventListener('dragover', (event) => {
             event.preventDefault();
             dropArea.style.backgroundColor = '#a5d6a7'; // verde claro
@@ -1109,6 +1126,7 @@ con load
                 dropArea.style.backgroundColor = '#a5d6a7'; // verde claro
                 dropArea.style.borderColor = '#388e3c'; // verde oscuro
             }
+            
         });
 
         const dropAreaModa = document.getElementById('drop-area-moda');
@@ -1968,6 +1986,7 @@ con load
         
     </script>
 </body>
+
 </html>
 
- 
+
