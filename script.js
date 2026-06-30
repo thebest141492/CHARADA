@@ -1,3 +1,54 @@
+
+function normalizeSortText(value) {
+    return String(value ?? '')
+        .trim()
+        .toUpperCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ');
+}
+
+function findColumnIndex(headers, possibleNames, fallbackIndex = -1) {
+    const normalizedHeaders = headers.map(h => normalizeSortText(h));
+    for (const name of possibleNames) {
+        const normalizedName = normalizeSortText(name);
+        const exactIndex = normalizedHeaders.findIndex(h => h === normalizedName);
+        if (exactIndex !== -1) return exactIndex;
+        const containsIndex = normalizedHeaders.findIndex(h => h.includes(normalizedName));
+        if (containsIndex !== -1) return containsIndex;
+    }
+    return fallbackIndex;
+}
+
+function getSizeOrder(value) {
+    const size = normalizeSortText(value).replace(/[^A-Z0-9]/g, '');
+    const order = {
+        'XXCH': 1, '2XCH': 1, 'EXCH': 1,
+        'XCH': 2, 'ECH': 2,
+        'CH': 3, 'CHICA': 3, 'CHICO': 3, 'S': 3,
+        'M': 4, 'MED': 4, 'MEDIANA': 4, 'MEDIANO': 4,
+        'G': 5, 'GRANDE': 5, 'L': 5,
+        'EG': 6, 'EXG': 6, 'XG': 6, 'XL': 6,
+        'EEG': 7, 'XXG': 7, '2XL': 7, 'XXL': 7,
+        'EEEG': 8, 'XXXG': 8, '3XL': 8, 'XXXL': 8
+    };
+    return order[size] ?? 999;
+}
+
+function sortRowsByColorAndSize(rows, headers) {
+    const colorIndex = findColumnIndex(headers, ['COLOR', 'COLORES'], 7);
+    const tallaIndex = findColumnIndex(headers, ['TALLA', 'TALLAS', 'MEDIDA'], 8);
+    return [...rows].sort((a, b) => {
+        const colorA = normalizeSortText(a[colorIndex]);
+        const colorB = normalizeSortText(b[colorIndex]);
+        const colorCompare = colorA.localeCompare(colorB, 'es', { numeric: true });
+        if (colorCompare !== 0) return colorCompare;
+        const sizeCompare = getSizeOrder(a[tallaIndex]) - getSizeOrder(b[tallaIndex]);
+        if (sizeCompare !== 0) return sizeCompare;
+        return normalizeSortText(a[tallaIndex]).localeCompare(normalizeSortText(b[tallaIndex]), 'es', { numeric: true });
+    });
+}
+
 const users = {}; // Almacén de usuarios registrados
 
 function showRegister() {
@@ -155,7 +206,7 @@ function generateTable(data) {
         });
         tableHead.appendChild(headerRow);
 
-        data.slice(1).forEach(row => {
+        sortRowsByColorAndSize(data.slice(1), headers).forEach(row => {
             const tableRow = document.createElement('tr');
             row.forEach(cell => {
                 const td = document.createElement('td');
@@ -188,7 +239,7 @@ function populateDataTable(data) {
 
     // Generar filas de datos
     const tbody = document.createElement('tbody');
-    data.slice(1).forEach((row) => {
+    sortRowsByColorAndSize(data.slice(1), headers).forEach((row) => {
         const tr = document.createElement('tr');
         row.forEach((cell) => {
             const td = document.createElement('td');
