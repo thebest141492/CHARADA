@@ -640,26 +640,40 @@ con load
                     <div class="card p-4 h-100"style="margin-top: 20px;">
                        <h2 class="text-center animate__animated animate__slideInLeft">Impresión de códigos</h2>
 
-                        <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
-                            <button class="btn btn-secondary" onclick="showUniqueModels()">Modelos</button>
-                            <select id="model-select" class="form-select" style="display: none; width: auto;" onchange="filterByModel()">
-                                <option value="">Selecciona un modelo</option>
-                            </select>
 
-                            <button class="btn btn-danger" style="display: none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
-                            <button class="btn btn-secondary" onclick="showUniqueStores()">Tiendas</button>
-                            <select id="store-select" class="form-select" style="display: none; width: auto;" onchange="filterByStore()">
-                                <option value="">Selecciona una tienda</option>
-                            </select>
-                            
-                            <button class="btn btn-danger" style="display: none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
-                            <button class="btn btn-secondary" onclick="showUniqueCedis()">Cedis</button>
-                            <select id="cedis-select" class="form-select" style="display: none; width: auto;" onchange="filterByCedis()">
-                                <option value="">Selecciona un cedis</option>
-                            </select>
-                            <button class="btn btn-danger" style="display: none;" id="clear-cedis-filter" onclick="clearCedisFilter()">Quitar filtro</button>
-                            <button class="btn btn-primary ms-auto" onclick="printContainer()">Imprimir</button>
-                        </div>
+
+                        <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
+
+    <button class="btn btn-secondary" onclick="showUniqueModels()">Modelos</button>
+    <select id="model-select" class="form-select" style="display:none; width:auto;" onchange="filterByModel()">
+        <option value="">Selecciona un modelo</option>
+    </select>
+
+    <button class="btn btn-danger" style="display:none;" id="clear-model-filter" onclick="clearModelFilter()">Quitar filtro</button>
+
+    <!-- CEDIS PRIMERO -->
+    <button class="btn btn-secondary" onclick="showUniqueCedis()">Cedis</button>
+
+    <select id="cedis-select" class="form-select" style="display:none; width:auto;" onchange="filterByCedis()">
+        <option value="">Selecciona un CEDIS</option>
+    </select>
+
+    <button class="btn btn-danger" style="display:none;" id="clear-cedis-filter" onclick="clearCedisFilter()">Quitar filtro</button>
+
+    <!-- TIENDAS DESPUÉS -->
+    <button class="btn btn-secondary" onclick="showUniqueStores()">Tiendas</button>
+
+    <select id="store-select" class="form-select" style="display:none; width:auto;" onchange="filterByStore()">
+        <option value="">Selecciona una tienda</option>
+    </select>
+
+    <button class="btn btn-danger" style="display:none;" id="clear-store-filter" onclick="clearStoreFilter()">Quitar filtro</button>
+
+    <button class="btn btn-primary ms-auto" onclick="printContainer()">
+        Imprimir
+    </button>
+
+</div>
                         <div id="print-container" style="display: none; width: 900px; height: 900px; border: 1px solid black; padding: 10px; font-size: 0.9rem;">
                         </div>
                         <div id="data-table-container">
@@ -1017,8 +1031,13 @@ con load
                 });
             };
             reader.readAsArrayBuffer(file);
-            // Notificación al cargar archivo
-            showNotification('¡Archivo cargado con éxito!', 'success');
+            // Mostrar mensaje de éxito
+showNotification('¡Archivo cargado con éxito!', 'success');
+
+// Esperar 3 segundos y cambiar a "Etiquetas Resurtidos"
+setTimeout(() => {
+    showSales();
+}, 2000);
 
         }
 
@@ -1093,9 +1112,13 @@ con load
                 });
             };
             reader.readAsArrayBuffer(file);
-            // Notificación al cargar archivo
-            showNotification('¡Archivo cargado con éxito!', 'success');
+            // Mostrar mensaje de éxito
+showNotification('¡Archivo cargado con éxito!', 'success');
 
+// Esperar 3 segundos y cambiar a "Etiquetas Resurtidos"
+setTimeout(() => {
+    showSales();
+}, 3000);
         }
 
         function toggleMenu() {
